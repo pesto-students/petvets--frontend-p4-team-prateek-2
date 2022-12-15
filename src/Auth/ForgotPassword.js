@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../App';
+import { auth } from '../Auth/firebase';
 
 function Copyright(props) {
   return (
@@ -41,8 +41,8 @@ export const ForgotPassword = () => {
     sendPasswordResetEmail(auth, email)
       .then((userCredential) => {
         // Signed in
-        // const user = userCredential.user;
-        console.log(userCredential);
+        const user = userCredential.user;
+        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;

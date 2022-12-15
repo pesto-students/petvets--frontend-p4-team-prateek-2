@@ -5,6 +5,7 @@ import { SignUp } from './Auth/SignUp';
 import { SignIn } from './Auth/SignIn';
 import { ForgotPassword } from './Auth/ForgotPassword';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './index.css';
 const router = createBrowserRouter([
   {
     path: '/',
