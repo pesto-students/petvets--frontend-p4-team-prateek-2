@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../Auth/firebase';
+import { auth } from '../firebaseConfig';
 
 function Copyright(props) {
   return (
