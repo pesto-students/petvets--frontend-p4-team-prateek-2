@@ -41,21 +41,14 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 onAuthStateChanged(auth, (user) => {
   if (user !== null) {
     store.dispatch(signin());
-    root.render(
-      <React.StrictMode>
-        <Provider store={store}>
-          <RouterProvider router={router} />
-        </Provider>
-      </React.StrictMode>
-    );
   } else {
     store.dispatch(signout());
-    root.render(
-      <React.StrictMode>
-        <Provider store={store}>
-          <RouterProvider router={router} />
-        </Provider>
-      </React.StrictMode>
-    );
   }
+  root.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </React.StrictMode>
+  );
 });
