@@ -1,49 +1,56 @@
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import {
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
-import { useNavigate } from 'react-router-dom';
+import { queryClient } from '../index';
 import { Copyright } from '../MuiComponents/Copyright';
+import { getUserAPI } from './api-endpoints';
 
 const theme = createTheme();
 
 export const SignIn = () => {
-  const navigate = useNavigate();
+  const [redirect, setRedirect] = useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        // const user = userCredential.user;
-        navigate('/');
-        console.log(userCredential);
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        const { userDetails } = await queryClient.fetchQuery({
+          queryKey: 'getUserAPI',
+          queryFn: () => getUserAPI(user.uid),
+        });
+        console.log(userDetails);
+        setRedirect(true);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
       });
-
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
+
+  if (redirect) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <ThemeProvider theme={theme}>

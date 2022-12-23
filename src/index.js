@@ -13,8 +13,14 @@ import { UserProfile } from './MuiComponents/UserProfile';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import { signin, signout } from './reducers/auth.reducer';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
+  { path: '/signUp', element: <SignUp /> },
+  { path: '/signIn', element: <SignIn /> },
+  { path: '/forgotPassword', element: <ForgotPassword /> },
   {
     path: '/',
     element: (
@@ -31,9 +37,6 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-  { path: '/signUp', element: <SignUp /> },
-  { path: '/signIn', element: <SignIn /> },
-  { path: '/forgotPassword', element: <ForgotPassword /> },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -46,9 +49,11 @@ onAuthStateChanged(auth, (user) => {
   }
   root.render(
     <React.StrictMode>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </QueryClientProvider>
     </React.StrictMode>
   );
 });
