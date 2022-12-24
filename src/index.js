@@ -13,22 +13,40 @@ import { UserProfile } from './MuiComponents/UserProfile';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import { signin, signout } from './reducers/auth.reducer';
+import { FindDoctor } from './Home/FindDoctor';
+import { ShowDoctor } from './Home/ShowDoctor';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <ProtectedRoute>
-        <App />
-      </ProtectedRoute>
+      // <ProtectedRoute>
+      <App />
+      // </ProtectedRoute>
     ),
   },
   {
     path: '/userProfile',
     element: (
-      <ProtectedRoute>
-        <UserProfile />
-      </ProtectedRoute>
+      // <ProtectedRoute>
+      <UserProfile />
+      // </ProtectedRoute>s
+    ),
+  },
+  {
+    path: '/findDoctor',
+    element: (
+      // <ProtectedRoute>
+      <FindDoctor />
+      // </ProtectedRoute>s
+    ),
+  },
+  {
+    path: '/findDoctor/:id',
+    element: (
+      // <ProtectedRoute>
+      <ShowDoctor />
+      // </ProtectedRoute>s
     ),
   },
   { path: '/signUp', element: <SignUp /> },
