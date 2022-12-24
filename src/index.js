@@ -44,7 +44,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 onAuthStateChanged(auth, (user) => {
   if (user !== null) {
-    store.dispatch(signin());
+    store.dispatch(signin(user.uid));
   } else {
     store.dispatch(signout());
   }

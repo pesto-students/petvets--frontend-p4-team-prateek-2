@@ -18,9 +18,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
+import { useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
 import { Copyright } from '../MuiComponents/Copyright';
+import { storeUserData } from '../reducers/auth.reducer';
 import { createUserAPI } from './api-endpoints';
 
 const theme = createTheme();
@@ -28,6 +30,7 @@ const theme = createTheme();
 export const SignUp = (props) => {
   const [redirect, setRedirect] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const [userInput, setUserInput] = useState({
     firstName: '',
     lastName: '',
@@ -111,8 +114,10 @@ export const SignUp = (props) => {
   };
 
   const createUser = useMutation(createUserAPI, {
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       console.log(data);
+      console.log(variables);
+      dispatch(storeUserData(variables));
       setLoading(false);
       setRedirect(true);
     },

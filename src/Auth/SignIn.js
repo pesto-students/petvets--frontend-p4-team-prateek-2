@@ -38,7 +38,6 @@ export const SignIn = () => {
           queryKey: 'getUserAPI',
           queryFn: () => getUserAPI(user.uid),
         });
-        console.log(userDetails);
         setRedirect(true);
       })
       .catch((error) => {
