@@ -1,24 +1,25 @@
+import { onAuthStateChanged } from 'firebase/auth';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from './App';
-import { SignUp } from './Auth/SignUp';
-import { SignIn } from './Auth/SignIn';
-import { ForgotPassword } from './Auth/ForgotPassword';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { store } from './store';
-import { Provider } from 'react-redux';
-import './index.css';
-import { ProtectedRoute } from './ProtectedRoute';
-import { UserProfile } from './MuiComponents/UserProfile';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebaseConfig';
-import { signin, signout } from './reducers/auth.reducer';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Provider } from 'react-redux';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { App } from './App';
+import { ForgotPassword } from './Auth/ForgotPassword';
+import { SignIn } from './Auth/SignIn';
+import { SignUp } from './Auth/SignUp';
+import { auth } from './firebaseConfig';
+import './index.css';
+import { UserProfile } from './MuiComponents/UserProfile';
+import { ProtectedRoute } from './ProtectedRoute';
+import { signin, signout } from './reducers/auth.reducer';
+import { store } from './store';
 
 export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
-  { path: '/signUp', element: <SignUp /> },
+  { path: '/userSignUp', element: <SignUp roles={['user']} /> },
+  { path: '/doctorSignUp', element: <SignUp roles={['doctor', 'user']} /> },
   { path: '/signIn', element: <SignIn /> },
   { path: '/forgotPassword', element: <ForgotPassword /> },
   {

@@ -25,7 +25,7 @@ import { createUserAPI } from './api-endpoints';
 
 const theme = createTheme();
 
-export const SignUp = () => {
+export const SignUp = (props) => {
   const [redirect, setRedirect] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState({
@@ -141,6 +141,7 @@ export const SignUp = () => {
         const body = {
           userId: fbData.uid,
           profileDetails,
+          roles: props.roles,
         };
         createUser.mutate(body);
       })
@@ -194,7 +195,6 @@ export const SignUp = () => {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  autoFocus
                   onChange={onInputChange}
                   onBlur={validateInput}
                 />
@@ -301,15 +301,23 @@ export const SignUp = () => {
             >
               Sign Up
             </LoadingButton>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
+            <Grid container>
+              <Grid item xs>
                 <Link href="/signIn" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
+              <Grid item>
+                {props.roles.includes('doctor') ? null : (
+                  <Link href="/doctorSignUp" variant="body2">
+                    {'Are you a doctor? Register here'}
+                  </Link>
+                )}
+              </Grid>
             </Grid>
           </Box>
         </Box>
+
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
