@@ -1,72 +1,78 @@
+import { onAuthStateChanged } from 'firebase/auth';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from './App';
-import { SignUp } from './Auth/SignUp';
-import { SignIn } from './Auth/SignIn';
-import { ForgotPassword } from './Auth/ForgotPassword';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { store } from './store';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
-import './index.css';
-import { ProtectedRoute } from './ProtectedRoute';
-import { UserProfile } from './MuiComponents/UserProfile';
-import { onAuthStateChanged } from 'firebase/auth';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { App } from './App';
+import { ForgotPassword } from './Auth/ForgotPassword';
+import { SignIn } from './Auth/SignIn';
+import { SignUp } from './Auth/SignUp';
 import { auth } from './firebaseConfig';
-import { signin, signout } from './reducers/auth.reducer';
 import { FindDoctor } from './Home/FindDoctor';
 import { ShowDoctor } from './Home/ShowDoctor';
+import './index.css';
+import { UserProfile } from './MuiComponents/UserProfile';
+import { ProtectedRoute } from './ProtectedRoute';
+import { signin, signout } from './reducers/auth.reducer';
+import { store } from './store';
+
+export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
+  { path: '/userSignUp', element: <SignUp roles={['user']} /> },
+  { path: '/doctorSignUp', element: <SignUp roles={['doctor', 'user']} /> },
+  { path: '/signIn', element: <SignIn /> },
+  { path: '/forgotPassword', element: <ForgotPassword /> },
   {
     path: '/',
     element: (
-      // <ProtectedRoute>
-      <App />
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
     ),
   },
   {
     path: '/userProfile',
     element: (
-      // <ProtectedRoute>
-      <UserProfile />
-      // </ProtectedRoute>s
+      <ProtectedRoute>
+        <UserProfile />
+      </ProtectedRoute>
     ),
   },
   {
     path: '/findDoctor',
     element: (
-      // <ProtectedRoute>
+      //       <ProtectedRoute>
       <FindDoctor />
-      // </ProtectedRoute>s
+      //       </ProtectedRoute>s
     ),
   },
   {
     path: '/findDoctor/:id',
     element: (
-      // <ProtectedRoute>
+      //       <ProtectedRoute>
       <ShowDoctor />
       // </ProtectedRoute>s
     ),
   },
-  { path: '/signUp', element: <SignUp /> },
-  { path: '/signIn', element: <SignIn /> },
-  { path: '/forgotPassword', element: <ForgotPassword /> },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 onAuthStateChanged(auth, (user) => {
   if (user !== null) {
-    store.dispatch(signin());
+    store.dispatch(signin(user.uid));
   } else {
     store.dispatch(signout());
   }
   root.render(
     <React.StrictMode>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </QueryClientProvider>
     </React.StrictMode>
   );
 });
