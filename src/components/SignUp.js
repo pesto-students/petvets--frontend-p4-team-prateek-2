@@ -154,6 +154,8 @@ export const SignUp = (props) => {
         setFirebaseError('Email already exist');
       if (error.code === 'auth/invalid-email')
         setFirebaseError('Please enter valid email address');
+      if (error.code === 'auth/weak-password')
+        setFirebaseError('Please set strong password');
       setLoading(false);
       console.log(error.code);
     }

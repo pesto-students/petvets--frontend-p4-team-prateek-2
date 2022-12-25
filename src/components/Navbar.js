@@ -1,20 +1,23 @@
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
+
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { signOut } from 'firebase/auth';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
 import { signout } from '../reducers/auth.reducer';
 
@@ -23,6 +26,7 @@ const pages = ['Products', 'Pricing', 'Blog'];
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { userData } = useSelector((state) => state.authStatus);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSignOut = async () => {
@@ -109,6 +113,9 @@ export const Navbar = () => {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">All Doctors</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -140,6 +147,14 @@ export const Navbar = () => {
                 {page}
               </Button>
             ))}
+            {userData?.role === 'admin' ? (
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                <Link to={'/allDoctors'}>All Doctors</Link>
+              </Button>
+            ) : null}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

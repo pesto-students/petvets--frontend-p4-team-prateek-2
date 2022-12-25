@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { App } from './App';
+import AdminDoctor from './components/AdminDoctor';
+import AllDoctors from './components/AllDoctors';
 import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
 import { ShowDoctor } from './components/ShowDoctor';
@@ -31,6 +33,11 @@ const router = createBrowserRouter([
         <App />
       </ProtectedRoute>
     ),
+    children: [{ path: '/allDoctors', element: <AllDoctors /> }],
+  },
+  {
+    path: '/allDoctors/:userId',
+    element: <AdminDoctor />,
   },
   {
     path: '/userProfile',
