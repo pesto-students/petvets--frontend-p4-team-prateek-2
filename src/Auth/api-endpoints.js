@@ -1,16 +1,27 @@
 import axiosClient from '../api-client';
-export const createUserAPI = (userData) =>
-  axiosClient
-    .post('/users/createUser', userData)
-    .then((result) => result.data)
-    .catch((error) => {
-      console.log(error);
-    });
+export const createUserAPI = async (userData) => {
+  try {
+    const { data } = await axiosClient.post('/api/users', userData);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const getUserAPI = (userId) =>
-  axiosClient
-    .get(`/users/getUser/${userId}`)
-    .then((result) => result.data)
-    .catch((error) => {
-      console.log(error);
-    });
+export const getUserAPI = async (userId) => {
+  try {
+    const { data } = await axiosClient.get(`/api/users/${userId}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllUsersAPI = async (role) => {
+  try {
+    const { data } = await axiosClient.get(`/api/users?role=${role}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

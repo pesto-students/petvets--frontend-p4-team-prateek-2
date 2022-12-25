@@ -25,16 +25,16 @@ export const Navbar = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        console.log('Sign out successfull');
-        dispatch(signout);
-        navigate('/signIn');
-      })
-      .catch((error) => {
-        console.log('Sign out error');
-      });
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+
+      dispatch(signout);
+      navigate('/signIn');
+      console.log('Sign out successfull');
+    } catch (error) {
+      console.log('Sign out error' + error);
+    }
   };
 
   const handleOpenNavMenu = (event) => {

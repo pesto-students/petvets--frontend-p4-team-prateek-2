@@ -126,40 +126,40 @@ export const SignUp = (props) => {
     },
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const fbData = userCredential.user;
-        const profileDetails = {
-          firstName: data.get('firstName'),
-          lastName: data.get('lastName'),
-          email: fbData.email,
-          isEmailVerified: fbData.emailVerified,
-          metadata: fbData.metadata,
-        };
-        const body = {
-          userId: fbData.uid,
-          profileDetails,
-          roles: props.roles,
-        };
-        createUser.mutate(body);
-      })
-      .catch((error) => {
-        if (error.code === 'auth/email-already-in-use')
-          setFirebaseError('Email already exist');
-        if (error.code === 'auth/invalid-email')
-          setFirebaseError('Please enter valid email address');
-        setLoading(false);
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-        console.log(error.code);
-      });
+    try {
+      const { user: fbData } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const profileDetails = {
+        firstName: data.get('firstName'),
+        lastName: data.get('lastName'),
+        email: fbData.email,
+        isEmailVerified: fbData.emailVerified,
+        metadata: fbData.metadata,
+      };
+      const body = {
+        userId: fbData.uid,
+        profileDetails,
+        roles: props.roles,
+      };
+      createUser.mutate(body);
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use')
+        setFirebaseError('Email already exist');
+      if (error.code === 'auth/invalid-email')
+        setFirebaseError('Please enter valid email address');
+      setLoading(false);
+      console.log(error.code);
+    }
   };
 
   if (redirect) {
@@ -298,7 +298,12 @@ export const SignUp = (props) => {
                 validationErrors.lastName ||
                 validationErrors.email !== '' ||
                 validationErrors.password !== '' ||
-                validationErrors.confirmPassword !== ''
+                validationErrors.confirmPassword !== '' ||
+                userInput.firstName === '' ||
+                userInput.lastName === '' ||
+                userInput.email === '' ||
+                userInput.password === '' ||
+                userInput.confirmPassword === ''
               }
               fullWidth
               variant="contained"

@@ -17,34 +17,26 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
-import { queryClient } from '../index';
 import { Copyright } from '../MuiComponents/Copyright';
-import { getUserAPI } from './api-endpoints';
 
 const theme = createTheme();
 
 export const SignIn = () => {
   const [redirect, setRedirect] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        const { userDetails } = await queryClient.fetchQuery({
-          queryKey: 'getUserAPI',
-          queryFn: () => getUserAPI(user.uid),
-        });
-        setRedirect(true);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setRedirect(true);
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    }
   };
 
   if (redirect) {
