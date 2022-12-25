@@ -9,6 +9,8 @@ import { ForgotPassword } from './Auth/ForgotPassword';
 import { SignIn } from './Auth/SignIn';
 import { SignUp } from './Auth/SignUp';
 import { auth } from './firebaseConfig';
+import { FindDoctor } from './Home/FindDoctor';
+import { ShowDoctor } from './Home/ShowDoctor';
 import './index.css';
 import { UserProfile } from './MuiComponents/UserProfile';
 import { ProtectedRoute } from './ProtectedRoute';
@@ -36,6 +38,22 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <UserProfile />
       </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/findDoctor',
+    element: (
+      //       <ProtectedRoute>
+      <FindDoctor />
+      //       </ProtectedRoute>s
+    ),
+  },
+  {
+    path: '/findDoctor/:id',
+    element: (
+      //       <ProtectedRoute>
+      <ShowDoctor />
+      // </ProtectedRoute>s
     ),
   },
 ]);
