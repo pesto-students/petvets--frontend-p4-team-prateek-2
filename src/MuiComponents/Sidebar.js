@@ -1,16 +1,16 @@
-import * as React from 'react';
+import MailIcon from '@mui/icons-material/Mail';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 import Box from '@mui/material/Box';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { useSelector, useDispatch } from 'react-redux';
-import { openSidebar, closeSidebar } from '../reducers/navigation.reducer';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeSidebar, openSidebar } from '../reducers/navigation.reducer';
 
 export const Sidebar = () => {
   const dispatch = useDispatch();

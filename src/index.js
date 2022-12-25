@@ -5,14 +5,14 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { App } from './App';
-import { ForgotPassword } from './Auth/ForgotPassword';
-import { SignIn } from './Auth/SignIn';
-import { SignUp } from './Auth/SignUp';
+import { FindDoctor } from './components/FindDoctor';
+import { ForgotPassword } from './components/ForgotPassword';
+import { ShowDoctor } from './components/ShowDoctor';
+import { SignIn } from './components/SignIn';
+import { SignUp } from './components/SignUp';
 import { auth } from './firebaseConfig';
-import { FindDoctor } from './Home/FindDoctor';
-import { ShowDoctor } from './Home/ShowDoctor';
 import './index.css';
-import { UserProfile } from './MuiComponents/UserProfile';
+import { UserProfile } from './muiComponents/UserProfile';
 import { ProtectedRoute } from './ProtectedRoute';
 import { signin, signout } from './reducers/auth.reducer';
 import { store } from './store';
@@ -20,8 +20,8 @@ import { store } from './store';
 export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
-  { path: '/userSignUp', element: <SignUp roles={['user']} /> },
-  { path: '/doctorSignUp', element: <SignUp roles={['doctor', 'user']} /> },
+  { path: '/userSignUp', element: <SignUp role="user" /> },
+  { path: '/doctorSignUp', element: <SignUp role="doctor" /> },
   { path: '/signIn', element: <SignIn /> },
   { path: '/forgotPassword', element: <ForgotPassword /> },
   {
@@ -43,17 +43,17 @@ const router = createBrowserRouter([
   {
     path: '/findDoctor',
     element: (
-      //       <ProtectedRoute>
-      <FindDoctor />
-      //       </ProtectedRoute>s
+      <ProtectedRoute>
+        <FindDoctor />
+      </ProtectedRoute>
     ),
   },
   {
     path: '/findDoctor/:id',
     element: (
-      //       <ProtectedRoute>
-      <ShowDoctor />
-      // </ProtectedRoute>s
+      <ProtectedRoute>
+        <ShowDoctor />
+      </ProtectedRoute>
     ),
   },
 ]);
