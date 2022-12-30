@@ -1,20 +1,22 @@
-import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { auth } from '../firebaseConfig';
+import MenuIcon from '@mui/icons-material/Menu';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { signOut } from 'firebase/auth';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebaseConfig';
+import { signout } from '../reducers/auth.reducer';
 
 const pages = ['Find Doctor', 'Blog'];
 
@@ -22,16 +24,17 @@ export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        navigate('/signIn');
-        console.log('Sign out successfull');
-      })
-      .catch((error) => {
-        console.log('Sign out error');
-      });
+      dispatch(signout);
+      navigate('/signIn');
+      console.log('Sign out successfull');
+    } catch (error) {
+      console.log('Sign out error' + error);
+    }
   };
 
   const handleOpenNavMenu = (event) => {

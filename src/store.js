@@ -7,4 +7,11 @@ export const store = configureStore({
     authStatus: authReducer,
     navStatus: navReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoreActions: ['authStatus/storeUserData'],
+        ignoredPaths: ['authStatus.userData.profileDetails.metadata'],
+      },
+    }),
 });
