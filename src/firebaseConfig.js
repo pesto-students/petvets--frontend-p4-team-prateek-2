@@ -1,13 +1,13 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 const firebaseApp = initializeApp({
-  apiKey: 'AIzaSyBsxlmCMQy1DJgIIGJU8Pdl4_sQjBdFxGY',
-  authDomain: 'petvet-36f81.firebaseapp.com',
-  projectId: 'petvet-36f81',
-  storageBucket: 'petvet-36f81.appspot.com',
-  messagingSenderId: '565348669373',
-  appId: '1:565348669373:web:84cfe18b23378cab0624d4',
-  measurementId: 'G-7134W00JGN',
+  apiKey: process.env.REACT_APP_FB_KEY,
+  authDomain: process.env.REACT_APP_FB_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FB_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FB_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FB_MSG_SENDER_ID,
+  appId: process.env.REACT_APP_FB_APP_ID,
+  measurementId: process.env.REACT_APP_FB_MEASUREMENT_ID,
 });
 
 export const auth = getAuth(firebaseApp);
