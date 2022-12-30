@@ -1,7 +1,6 @@
 import moment from 'moment';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import moment from 'moment';
 import axiosClient from '../api-client';
 import { displayRazorpay } from './razorpay';
 import '../css/showDoctor.css';
@@ -14,13 +13,11 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
