@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { createUserAPI } from '../actions/users.actions';
 import { auth } from '../firebaseConfig';
-import { Copyright } from '../muiComponents/Copyright';
+import { Copyright } from '../MuiComponents/Copyright';
 import { storeUserData } from '../reducers/auth.reducer';
 
 const theme = createTheme();

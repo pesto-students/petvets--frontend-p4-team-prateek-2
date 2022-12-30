@@ -17,7 +17,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
-import { Copyright } from '../muiComponents/Copyright';
+import { Copyright } from '../MuiComponents/Copyright';
 
 const theme = createTheme();
 

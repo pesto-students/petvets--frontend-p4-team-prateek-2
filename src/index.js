@@ -14,7 +14,7 @@ import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
 import { auth } from './firebaseConfig';
 import './index.css';
-import { UserProfile } from './muiComponents/UserProfile';
+import { UserProfile } from './MuiComponents/UserProfile';
 import { ProtectedRoute } from './ProtectedRoute';
 import { signin, signout } from './reducers/auth.reducer';
 import { store } from './store';
@@ -33,7 +33,10 @@ const router = createBrowserRouter([
         <App />
       </ProtectedRoute>
     ),
-    children: [{ path: '/allDoctors', element: <AllDoctors /> }],
+    children: [
+      { path: '/allDoctors', element: <AllDoctors /> },
+      { path: '/findDoctor/:id', element: <ShowDoctor /> },
+    ],
   },
   {
     path: '/allDoctors/:userId',
@@ -52,14 +55,6 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <FindDoctor />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/findDoctor/:id',
-    element: (
-      <ProtectedRoute>
-        <ShowDoctor />
       </ProtectedRoute>
     ),
   },
