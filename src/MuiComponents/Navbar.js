@@ -16,7 +16,7 @@ import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Find Doctor', 'Blog'];
 
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);

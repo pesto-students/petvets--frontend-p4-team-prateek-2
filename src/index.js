@@ -24,6 +24,14 @@ const router = createBrowserRouter([
       <App />
       // </ProtectedRoute>
     ),
+    children: [
+      { path: '/allDoctors', element: <AllDoctors /> },
+      { path: '/findDoctor/:id', element: <ShowDoctor /> },
+    ],
+  },
+  {
+    path: '/allDoctors/:userId',
+    element: <AdminDoctor />,
   },
   {
     path: '/userProfile',

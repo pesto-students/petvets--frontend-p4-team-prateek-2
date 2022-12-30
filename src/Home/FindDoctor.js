@@ -13,7 +13,7 @@ export const FindDoctor = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const url = 'http://localhost:5000/api/users?role=Doctor';
+    const url = 'http://localhost:4000/api/users?role=doctor';
     fetch(url)
       .then((response) => response.json())
       .then((json) => setDoctor(json))
@@ -21,20 +21,25 @@ export const FindDoctor = () => {
   }, []);
 
   const showDoctor = (id) => {
+    console.log(id);
     navigate('/findDoctor/' + id);
   };
 
   return (
     <>
       {doctor.map((doc) => (
-        <Card sx={{ maxWidth: 345 }}>
-          <CardMedia sx={{ height: 140 }} image={doc.image} title={doc.name} />
+        <Card sx={{ maxWidth: 345 }} key="doc._id">
+          <CardMedia
+            sx={{ height: 140 }}
+            image={doc.image}
+            title={doc.firstName}
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {doc.name}
+              {doc.firstName} {doc.lastName}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {doc.years_of_experience} years of experience
+              {doc.yearsOfExperience} years of experience
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {doc.services}
@@ -44,7 +49,7 @@ export const FindDoctor = () => {
             <Button
               size="small"
               variant="contained"
-              onClick={() => showDoctor(doc._id)}
+              onClick={() => showDoctor(doc.userId)}
             >
               Book Now
             </Button>
