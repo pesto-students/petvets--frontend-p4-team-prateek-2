@@ -58,14 +58,6 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-  {
-    path: '/findDoctor/:id',
-    element: (
-      <ProtectedRoute>
-        <ShowDoctor />
-      </ProtectedRoute>
-    ),
-  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

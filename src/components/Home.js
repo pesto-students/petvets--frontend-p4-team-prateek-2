@@ -1,5 +1,7 @@
+import { Box, Container } from '@mui/material';
 import React from 'react';
 
+import { Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 
@@ -7,6 +9,17 @@ export const Home = () => (
   <>
     <Navbar />
     <Sidebar />
-    <div>You are logged in</div>
+    <Container>
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Outlet />
+      </Box>
+    </Container>
   </>
 );
