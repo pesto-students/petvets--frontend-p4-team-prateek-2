@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Navbar } from '../MuiComponents/Navbar';
-import { Sidebar } from '../MuiComponents/Sidebar';
+import { Navbar } from './Navbar';
+import { Sidebar } from './Sidebar';
 
 export const Home = () => (
   <>
