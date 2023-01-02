@@ -35,7 +35,22 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
-      { path: '/findDoctor/:id', element: <ShowDoctor /> },
+      {
+        path: '/findDoctor/:id',
+        element: (
+          <ProtectedRoute>
+            <ShowDoctor />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/findDoctor',
+        element: (
+          <ProtectedRoute>
+            <FindDoctor />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   {
@@ -47,14 +62,6 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <UserProfile />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/findDoctor',
-    element: (
-      <ProtectedRoute>
-        <FindDoctor />
       </ProtectedRoute>
     ),
   },

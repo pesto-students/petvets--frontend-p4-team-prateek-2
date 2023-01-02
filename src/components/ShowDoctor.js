@@ -3,6 +3,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import axiosClient from '../api-client';
 import { displayRazorpay } from './razorpay';
+import { useSelector } from 'react-redux';
 import '../css/showDoctor.css';
 
 import Box from '@mui/material/Box';
@@ -22,8 +23,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-import { useSelector } from 'react-redux';
-
 export const ShowDoctor = () => {
   const params = useParams();
   const [bookNow, setBookNow] = React.useState(false);
@@ -31,9 +30,13 @@ export const ShowDoctor = () => {
   const [morningSlots, setMorningSlots] = React.useState([]);
   const [noonSlots, setNoonSlots] = React.useState([]);
   const [eveSlots, setEveSlots] = React.useState([]);
-  const [bookedSlots, setBookedSlot] = React.useState([]);
+  const [bookedSlots, setBookedSlots] = React.useState([]);
   const [selectedSlot, setSelectedSlot] = React.useState();
   const [active, setActive] = React.useState(false);
+  const { userData: doctor } = useSelector((state) => state.authStatus);
+
+  const steps = ['Select Date & Time', 'Add Details', 'Booking Confirmation'];
+  const [activeStep, setActiveStep] = React.useState(0);
   const [formData, setFormData] = React.useState({
     name: {
       value: '',
@@ -43,12 +46,12 @@ export const ShowDoctor = () => {
     petAge: {
       value: '',
       error: false,
-      errorMessage: 'Please enter an age',
+      errorMessage: 'Please enter your pet age',
     },
     petName: {
       value: '',
       error: false,
-      errorMessage: `Please enter your pet age`,
+      errorMessage: `Please enter your pet name`,
     },
     contact: {
       value: '',
@@ -56,11 +59,6 @@ export const ShowDoctor = () => {
       errorMessage: 'Please enter your contact no.',
     },
   });
-
-  const { userData: doctor } = useSelector((state) => state.authStatus);
-
-  const steps = ['Select Date & Time', 'Add Details', 'Booking Confirmation'];
-  const [activeStep, setActiveStep] = React.useState(0);
 
   const showCalendar = () => {
     setBookNow(true);
@@ -71,62 +69,66 @@ export const ShowDoctor = () => {
     return doctor.constantDaysOff.includes(day);
   };
 
+  const getBookedAppointments = (formattedDate) =>
+    axiosClient
+      .get(`api/appointments?vetId=${params.id}&date=${formattedDate}`)
+      .then((res) => res.data)
+      .catch((err) => err);
+
   const showSlots = async (date) => {
     const formattedDate = moment(date.$d).format('YYYY-MM-DD');
+    const startTime = moment(doctor.startTime, 'HH:mm');
+    const endTime = moment(doctor.endTime, 'HH:mm');
+    const slots = [];
+
     setSelectedDate(moment(date.$d).format('LL'));
 
     setMorningSlots([]);
     setNoonSlots([]);
     setEveSlots([]);
-    setBookedSlot([]);
+    setBookedSlots([]);
 
-    debugger;
-    const bookedAppointments = await axiosClient.get(
-      `api/appointments?vetId=${params.id}&date=${formattedDate}`
-    );
-
-    setBookedSlot(bookedAppointments.data);
-    console.log(bookedSlots);
-
-    const startTime = moment(doctor.startTime, 'HH:mm');
-    const endTime = moment(doctor.endTime, 'HH:mm');
-    const slots = [];
     while (startTime < endTime) {
       slots.push(startTime.format('HH:mm'));
       startTime.add('30', 'minutes');
     }
 
-    const findBookedSlot = (slot) => {
-      let disabled = false;
-      if (
-        bookedSlots.find((book) =>
-          moment(book.bookedSlot, 'HH:mm').isSame(moment(slot, 'HH:mm'))
-        )
-      ) {
-        disabled = true;
-      }
-      const json = {
-        time: slot,
-        disabled: disabled,
+    await getBookedAppointments(formattedDate).then((res) => {
+      setBookedSlots(res);
+      console.log(bookedSlots);
+
+      const findBookedSlot = (slot) => {
+        let disabled = false;
+        if (
+          bookedSlots.find((book) =>
+            moment(book.bookedSlot, 'HH:mm').isSame(moment(slot, 'HH:mm'))
+          )
+        ) {
+          disabled = true;
+        }
+        const json = {
+          time: slot,
+          disabled: disabled,
+        };
+        return json;
       };
-      return json;
-    };
 
-    slots.forEach((slot) => {
-      if (moment(slot, 'HH:mm') <= moment('12:00', 'HH:mm')) {
-        setMorningSlots((current) => [...current, findBookedSlot(slot)]);
-      }
+      slots.forEach((slot) => {
+        if (moment(slot, 'HH:mm') <= moment('12:00', 'HH:mm')) {
+          setMorningSlots((current) => [...current, findBookedSlot(slot)]);
+        }
 
-      if (
-        moment(slot, 'HH:mm') >= moment('12:30', 'HH:mm') &&
-        moment(slot, 'HH:mm') <= moment('16:00', 'HH:mm')
-      ) {
-        setNoonSlots((current) => [...current, findBookedSlot(slot)]);
-      }
+        if (
+          moment(slot, 'HH:mm') >= moment('12:30', 'HH:mm') &&
+          moment(slot, 'HH:mm') <= moment('16:00', 'HH:mm')
+        ) {
+          setNoonSlots((current) => [...current, findBookedSlot(slot)]);
+        }
 
-      if (moment(slot, 'HH:mm') >= moment('16:30', 'HH:mm')) {
-        setEveSlots((current) => [...current, findBookedSlot(slot)]);
-      }
+        if (moment(slot, 'HH:mm') >= moment('16:30', 'HH:mm')) {
+          setEveSlots((current) => [...current, findBookedSlot(slot)]);
+        }
+      });
     });
   };
 
@@ -171,6 +173,23 @@ export const ShowDoctor = () => {
         value,
       },
     });
+    validateInput(e);
+  };
+
+  const validateInput = (e) => {
+    let { name, value } = e.target;
+
+    setFormData((prev) => {
+      const stateObj = { ...prev };
+
+      if (!value) {
+        stateObj[name].error = true;
+      } else {
+        stateObj[name].error = false;
+      }
+
+      return stateObj;
+    });
   };
 
   const handleSubmit = (e) => {
@@ -181,25 +200,18 @@ export const ShowDoctor = () => {
 
     for (let index = 0; index < formFields.length; index++) {
       const currentField = formFields[index];
-      const currentValue = formData[currentField].value;
-
-      if (currentValue === '') {
-        newFormValues = {
-          ...newFormValues,
-          [currentField]: {
-            ...newFormValues[currentField],
-            error: true,
-          },
-        };
+      if (formData[currentField].error) {
+        return;
       }
     }
 
     setFormData(newFormValues);
+    setActiveStep(2);
   };
 
   return (
-    <>
-      <Card className="card">
+    <div className="card">
+      <Card>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
             <Grid item xs={4}>
@@ -254,7 +266,7 @@ export const ShowDoctor = () => {
           </Stepper>
           {activeStep === 0 && (
             <React.Fragment>
-              <div className="center-content">
+              <div className="center-content" style={{ height: '45vh' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Stack spacing={3}>
                     <DatePicker
@@ -302,46 +314,75 @@ export const ShowDoctor = () => {
                   alignItems: 'center',
                   '& > :not(style)': { m: 1 },
                 }}
+                component="form"
+                onSubmit={handleSubmit}
               >
-                <form onSubmit={handleSubmit}>
-                  <TextField
-                    fullWidth
-                    helperText=" "
-                    label="Name"
-                    required
-                    value={formData.name.value}
-                    onChange={handleChange}
-                  />
-                  <br />
-                  <TextField
-                    fullWidth
-                    helperText=" "
-                    id="pet-name"
-                    label="Pet's Name"
-                    required
-                    onChange={handleChange}
-                  />
-                  <br />
-                  <TextField
-                    fullWidth
-                    helperText=" "
-                    id="pet-age"
-                    label="Pet's Age"
-                    required
-                    value={formData.petAge.value}
-                    onChange={handleChange}
-                  />
-                  <br />
-                  <TextField
-                    fullWidth
-                    helperText=" "
-                    id="contact"
-                    label="Contact"
-                    required
-                    value={formData.contact.value}
-                    onChange={handleChange}
-                  />
-                </form>
+                <TextField
+                  className="label"
+                  fullWidth
+                  label="Name"
+                  name="name"
+                  required
+                  onChange={handleChange}
+                  onBlur={validateInput}
+                  value={formData.name.value}
+                />
+                {formData.name.error && (
+                  <small style={{ color: 'red' }}>
+                    {formData.name.errorMessage}
+                  </small>
+                )}
+                <br />
+                <TextField
+                  className="label"
+                  fullWidth
+                  id="pet-name"
+                  name="petName"
+                  label="Pet's Name"
+                  required
+                  onChange={handleChange}
+                  onBlur={validateInput}
+                  value={formData.petName.value}
+                />
+                {formData.petName.error && (
+                  <small style={{ color: 'red' }}>
+                    {formData.petName.errorMessage}
+                  </small>
+                )}
+                <br />
+                <TextField
+                  className="label"
+                  fullWidth
+                  id="pet-age"
+                  name="petAge"
+                  label="Pet's Age"
+                  required
+                  onChange={handleChange}
+                  onBlur={validateInput}
+                  value={formData.petAge.value}
+                />
+                {formData.petAge.error && (
+                  <small style={{ color: 'red' }}>
+                    {formData.petAge.errorMessage}
+                  </small>
+                )}
+                <br />
+                <TextField
+                  className="label"
+                  fullWidth
+                  id="contact"
+                  name="contact"
+                  label="Contact"
+                  required
+                  onChange={handleChange}
+                  onBlur={validateInput}
+                  value={formData.contact.value}
+                />
+                {formData.contact.error && (
+                  <small style={{ color: 'red' }}>
+                    {formData.contact.errorMessage}
+                  </small>
+                )}
               </Box>
             </React.Fragment>
           )}
@@ -377,7 +418,7 @@ export const ShowDoctor = () => {
 
             {activeStep < 2 && (
               <Button
-                onClick={handleNext}
+                onClick={activeStep === 0 ? handleNext : handleSubmit}
                 disabled={activeStep === 0 && !selectedSlot}
                 style={{
                   backgroundColor: selectedSlot ? '#1976d2' : 'grey',
@@ -412,6 +453,6 @@ export const ShowDoctor = () => {
           </CardContent>
         </Card>
       )}
-    </>
+    </div>
   );
 };
