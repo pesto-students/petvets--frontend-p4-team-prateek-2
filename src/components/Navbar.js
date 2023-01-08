@@ -183,7 +183,7 @@ export const Navbar = () => {
                 <Typography textAlign="center">Profile</Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Appointment History</Typography>
+                <Typography textAlign="center">My Appointment</Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>
                 <Typography textAlign="center">Account</Typography>
