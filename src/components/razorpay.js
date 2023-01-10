@@ -13,7 +13,7 @@ const loadScript = (src) =>
     document.body.appendChild(script);
   });
 
-export async function displayRazorpay() {
+export const displayRazorpay = async () => {
   const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
   if (!res) {
@@ -21,50 +21,33 @@ export async function displayRazorpay() {
     return;
   }
 
-  // creating a new order
-  const result = await axiosClient.post('api/payment/appointments');
-
-  if (!result) {
-    alert('Server error. Are you online?');
-    return;
-  }
-
-  // Getting the order details back
-  const { amount, id: order_id, currency } = result.data;
+  const data = await axiosClient
+    .post('api/payment/razorpay', {
+      method: 'POST',
+    })
+    .then((t) => t.json());
 
   const options = {
-    key: 'rzp_test_r6FiJfddJh76SI', // Enter the Key ID generated from the Dashboard
-    amount: amount.toString(),
-    currency: currency,
-    name: 'Soumya Corp.',
-    description: 'Test Transaction',
-    image: {},
-    order_id: order_id,
-    handler: async function (response) {
-      const data = {
-        orderCreationId: order_id,
-        razorpayPaymentId: response.razorpay_payment_id,
-        razorpayOrderId: response.razorpay_order_id,
-        razorpaySignature: response.razorpay_signature,
-      };
+    key: 'rzp_test_0tpemkHKm5K1Bc',
+    currency: data.currency,
+    amount: data.amount.toString(),
+    order_id: data.id,
+    name: 'Donation',
+    description: 'Thank you for nothing. Please give us some money',
+    image: 'logo',
+    handler: function (response) {
+      // alert(response.razorpay_payment_id);
+      // alert(response.razorpay_order_id);
+      // alert(response.razorpay_signature);
 
-      const result = await axiosClient.post('payment/success', data);
-
-      alert(result.data.msg);
+      alert('Transaction successful');
     },
     prefill: {
-      name: 'Swati J',
-      email: 'Swati J@example.com',
-      contact: '9999999999',
-    },
-    notes: {
-      address: 'Swati J Corporate Office',
-    },
-    theme: {
-      color: '#61dafb',
+      name: 'Rajat',
+      email: 'rajat@rajat.com',
+      phone_number: '9899999999',
     },
   };
-
   const paymentObject = new window.Razorpay(options);
   paymentObject.open();
-}
+};

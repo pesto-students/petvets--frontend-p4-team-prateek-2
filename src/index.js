@@ -8,13 +8,14 @@ import { App } from './App';
 import AdminDoctor from './components/AdminDoctor';
 import AllDoctors from './components/AllDoctors';
 import { FindDoctor } from './components/FindDoctor';
+import { AppointmentHistory } from './components/AppointmentHistory';
 import { ForgotPassword } from './components/ForgotPassword';
 import { ShowDoctor } from './components/ShowDoctor';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
-import { UserProfile } from './components/UserProfile';
 import { auth } from './firebaseConfig';
 import './index.css';
+import { UserProfile } from './MuiComponents/UserProfile';
 import { ProtectedRoute } from './ProtectedRoute';
 import { signin, signout } from './reducers/auth.reducer';
 import { store } from './store';
@@ -36,26 +37,40 @@ const router = createBrowserRouter([
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
       {
-        path: '/profile',
+        path: '/findDoctor/:id',
         element: (
           <ProtectedRoute>
-            <UserProfile />
+            <ShowDoctor />
           </ProtectedRoute>
         ),
       },
-      { path: '/findDoctor/:id', element: <ShowDoctor /> },
+      {
+        path: '/findDoctor',
+        element: (
+          <ProtectedRoute>
+            <FindDoctor />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/myAppointments',
+        element: (
+          <ProtectedRoute>
+            <AppointmentHistory />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   {
     path: '/allDoctors/:userId',
     element: <AdminDoctor />,
   },
-
   {
-    path: '/findDoctor',
+    path: '/userProfile',
     element: (
       <ProtectedRoute>
-        <FindDoctor />
+        <UserProfile />
       </ProtectedRoute>
     ),
   },
