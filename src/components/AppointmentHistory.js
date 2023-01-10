@@ -58,7 +58,8 @@ export const AppointmentHistory = () => {
                 </Grid>
                 <Grid item xs={8}>
                   <Typography gutterBottom variant="body2" component="div">
-                    {app.vetId}
+                    {app.vetDetail.firstName} {app.vetDetail.lastName},{' '}
+                    {app.vetDetail.clinicName}
                   </Typography>
                   <Typography gutterBottom variant="body2" component="div">
                     {app.bookedSlot}
