@@ -35,6 +35,14 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
+      {
+        path: '/profile',
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        ),
+      },
       { path: '/findDoctor/:id', element: <ShowDoctor /> },
     ],
   },
@@ -42,14 +50,7 @@ const router = createBrowserRouter([
     path: '/allDoctors/:userId',
     element: <AdminDoctor />,
   },
-  {
-    path: '/userProfile',
-    element: (
-      <ProtectedRoute>
-        <UserProfile />
-      </ProtectedRoute>
-    ),
-  },
+
   {
     path: '/findDoctor',
     element: (

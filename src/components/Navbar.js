@@ -180,7 +180,8 @@ export const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Profile</Typography>
+                <Link to={'/profile'}>Profile</Link>
+                {/* <Typography textAlign="center">Profile</Typography> */}
               </MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>
                 <Typography textAlign="center">Account</Typography>
