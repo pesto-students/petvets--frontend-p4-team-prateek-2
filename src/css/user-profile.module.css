@@ -1,0 +1,8 @@
+.input.Mui-disabled {
+  background-color: red;
+  color: red;
+}
+
+.errorText {
+  color: red;
+}
