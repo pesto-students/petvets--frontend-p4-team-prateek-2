@@ -33,7 +33,7 @@ export const UserProfile = () => {
         </Step>
         <Step>
           <StepButton color="inherit" onClick={() => dispatch(setStepper(2))}>
-            Service Details
+            Clinic Details
           </StepButton>
         </Step>
       </Stepper>

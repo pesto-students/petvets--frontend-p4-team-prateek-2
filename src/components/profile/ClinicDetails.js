@@ -9,18 +9,6 @@ import { updateUserProfileAPI } from '../../actions/users.actions';
 import { prevStepper } from '../../reducers/navigation.reducer';
 import { states, weeks } from '../../utilities/constants';
 
-const initialValues = {
-  clinicName: 'PetVet Clinic',
-  clinicAddress1: '78/6, Pongiyammal Street',
-  clinicAddress2: 'Rathinapuri',
-  clinicCity: 'Coimbatore',
-  clinicState: 'Tamilnadu',
-  clinicPincode: '641027',
-  clinicContactNo: '7020766046',
-  clinicDaysOff: [],
-  consultationFee: '500',
-};
-
 const profileValidation = Yup.object({
   clinicName: Yup.string().required('Please enter your clinic name'),
   clinicAddress1: Yup.string().required(
@@ -46,7 +34,19 @@ const profileValidation = Yup.object({
 
 const ClinicDetails = () => {
   const dispatch = useDispatch();
-  const { userId } = useSelector((state) => state.authStatus);
+  const { userId, userData } = useSelector((state) => state.authStatus);
+
+  const initialValues = {
+    clinicName: userData?.clinicName || '',
+    clinicAddress1: userData?.clinicAddress1 || '',
+    clinicAddress2: userData?.clinicAddress2 || '',
+    clinicCity: userData?.clinicCity || '',
+    clinicState: userData?.clinicState || '',
+    clinicPincode: userData?.clinicPincode || '',
+    clinicContactNo: userData?.clinicContactNo || '',
+    clinicDaysOff: userData?.clinicDaysOff || '',
+    consultationFee: userData?.consultationFee || '',
+  };
 
   const userUpdate = useMutation(updateUserProfileAPI, {
     onSuccess: (data) => {
@@ -58,11 +58,10 @@ const ClinicDetails = () => {
     initialValues: { ...initialValues },
     validationSchema: profileValidation,
     onSubmit: (values) => {
-      // userUpdate.mutate({
-      //   userId,
-      //   ...values,
-      // });
-      console.log(values);
+      userUpdate.mutate({
+        userId,
+        ...values,
+      });
     },
   });
   return (
@@ -147,7 +146,7 @@ const ClinicDetails = () => {
             disablePortal
             id="combo-box-demo"
             options={states}
-            // value={formik.values.clinicState}
+            value={formik.values.clinicState}
             onChange={(_, value) =>
               formik.setFieldValue('clinicState', value?.label)
             }
@@ -194,6 +193,7 @@ const ClinicDetails = () => {
             id="combo-box-demo"
             options={weeks}
             multiple={true}
+            value={formik.values.clinicDaysOff}
             onChange={(_, value) =>
               formik.setFieldValue('clinicDaysOff', value)
             }

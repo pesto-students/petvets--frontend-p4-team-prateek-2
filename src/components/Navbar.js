@@ -180,7 +180,9 @@ export const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Profile</Typography>
+                <Link to={'/profile'} style={{ textDecoration: 'none' }}>
+                  <Typography textAlign="center">Profile</Typography>
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>
                 <Typography textAlign="center">My Appointment</Typography>

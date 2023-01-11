@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import 'dayjs/locale/de';
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -51,7 +51,19 @@ const EducationalDetails = () => {
   const [open, setOpen] = useState(false);
   const [education, setEducation] = useState([]);
   const [expanded, setExpanded] = useState(false);
-  const { userId } = useSelector((state) => state.authStatus);
+  const { userId, userData } = useSelector((state) => state.authStatus);
+
+  useEffect(() => {
+    setEducation(userData?.degree);
+  }, [userData]);
+
+  const initialValues = {
+    collegeName: '',
+    specialization: '',
+    passingMarks: '',
+    passingYear: '',
+    degree: '',
+  };
 
   const userUpdate = useMutation(updateUserProfileAPI, {
     onSuccess: (data) => {
