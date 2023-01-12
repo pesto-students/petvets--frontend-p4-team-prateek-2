@@ -11,11 +11,11 @@ import { FindDoctor } from './components/FindDoctor';
 import { AppointmentHistory } from './components/AppointmentHistory';
 import { ForgotPassword } from './components/ForgotPassword';
 import { ShowDoctor } from './components/ShowDoctor';
+import { HomeContent } from './components/homeContent';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
 import { auth } from './firebaseConfig';
 import './index.css';
-import { UserProfile } from './MuiComponents/UserProfile';
 import { ProtectedRoute } from './ProtectedRoute';
 import { signin, signout } from './reducers/auth.reducer';
 import { store } from './store';
@@ -60,19 +60,15 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: '/',
+        element: <HomeContent />,
+      },
     ],
   },
   {
     path: '/allDoctors/:userId',
     element: <AdminDoctor />,
-  },
-  {
-    path: '/userProfile',
-    element: (
-      <ProtectedRoute>
-        <UserProfile />
-      </ProtectedRoute>
-    ),
   },
 ]);
 

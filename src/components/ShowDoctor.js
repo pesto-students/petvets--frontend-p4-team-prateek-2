@@ -2,7 +2,8 @@ import moment from 'moment';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import axiosClient from '../api-client';
-import { displayRazorpay } from './razorpay';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import '../css/showDoctor.css';
 
 import {
@@ -23,19 +24,24 @@ import {
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useSelector } from 'react-redux';
+import getStripe from '../lib/getStripe';
+import CheckoutForm from './CheckoutForm';
+import Payment from './PaymentModal';
 
 export const ShowDoctor = () => {
   const params = useParams();
   const [bookNow, setBookNow] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  // const [morningSlots, setMorningSlots] = React.useState([]);
-  // const [noonSlots, setNoonSlots] = React.useState([]);
-  // const [eveSlots, setEveSlots] = React.useState([]);
   const [availableSlot, setAvailableSlot] = React.useState([]);
   const [bookedSlots, setBookedSlots] = React.useState([]);
   const [selectedSlot, setSelectedSlot] = React.useState();
   const [active, setActive] = React.useState(false);
   const [doctor, setDoctor] = React.useState([]);
+  const { userData: user } = useSelector((state) => state.authStatus);
+  const stripePromise = loadStripe(
+    'pk_test_51MP8K1SDYs9Fp4t0viuykuiGoPZrKs0WN5iX0x913VlBzv2qJMQ8llEdqKjKkTDhrEKrLc4cXT0jPTdxVelKfAp900brApa01Y'
+  );
 
   const steps = ['Select Date & Time', 'Add Details', 'Booking Confirmation'];
   const [activeStep, setActiveStep] = React.useState(0);
@@ -76,8 +82,9 @@ export const ShowDoctor = () => {
 
   const disableWeekends = (date) => {
     const day = date.$d.getDay();
-    if (doctor.constantDaysOff.length)
+    if (doctor.constantDaysOff.length) {
       return doctor.constantDaysOff.includes(day);
+    }
     return [];
   };
 
@@ -106,7 +113,6 @@ export const ShowDoctor = () => {
       console.log(res);
       setBookedSlots(res);
     });
-    console.log('ffF', bookedSlots);
   };
 
   const setSlots = React.useCallback(() => {
@@ -114,33 +120,15 @@ export const ShowDoctor = () => {
     const startTime = moment(doctor.startTime, 'HH:mm');
     const endTime = moment(doctor.endTime, 'HH:mm');
     const slots = [];
+    const notAvailableSlot = bookedSlots.map((bs) => bs.bookedSlot);
+
     while (startTime < endTime) {
       slots.push(startTime.format('HH:mm'));
       startTime.add('30', 'minutes');
     }
-    console.log(slots);
-    setAvailableSlot(slots);
-    // slots.forEach((slot) => {
-    //   setAvailableSlot((current) => [
-    //     ...current,
-    //     () => {
-    //       let disabled = false;
-    //       if (
-    //         bookedSlots.find((book) =>
-    //           moment(book.bookedSlot, 'HH:mm').isSame(moment(slot, 'HH:mm'))
-    //         )
-    //       ) {
-    //         disabled = true;
-    //       }
-    //       const json = {
-    //         time: slot,
-    //         disabled: disabled,
-    //       };
-    //       console.log(json);
-    //       return json;
-    //     },
-    //   ]);
-    // });
+
+    const availableSlots = slots.filter((el) => !notAvailableSlot.includes(el));
+    setAvailableSlot(availableSlots);
   }, [bookedSlots, doctor.endTime, doctor.startTime]);
 
   React.useEffect(() => {
@@ -227,7 +215,7 @@ export const ShowDoctor = () => {
   return (
     <div className="card">
       <Card>
-        <Box sx={{ flexGrow: 1 }} style={{ 'margin-top': '15px' }}>
+        <Box sx={{ flexGrow: 1 }} style={{ marginTop: '15px' }}>
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <CardMedia
@@ -303,19 +291,6 @@ export const ShowDoctor = () => {
                     {availableSlot.map((slots) => slotButton(slots))}
                   </>
                 )}
-
-                {/* {noonSlots.length > 0 && (
-                  <>
-                    <p>Afternoon Slots:</p>
-                    {noonSlots.map((slots) => slotButton(slots))}
-                  </>
-                )}
-                {eveSlots.length > 0 && (
-                  <>
-                    <p>Evening Slots:</p>
-                    {eveSlots.map((slots) => slotButton(slots))}
-                  </>
-                )} */}
               </div>
             </React.Fragment>
           )}
@@ -419,6 +394,9 @@ export const ShowDoctor = () => {
                     </Typography>
                   </CardContent>
                 </Card>
+                {/* <Elements stripe={stripePromise}>
+                  <CheckoutForm />
+                </Elements> */}
               </Box>
             </React.Fragment>
           )}
@@ -443,15 +421,9 @@ export const ShowDoctor = () => {
               </Button>
             )}
             {activeStep === 2 && (
-              <Button
-                onClick={displayRazorpay}
-                style={{
-                  backgroundColor: selectedSlot ? '#1976d2' : 'grey',
-                  color: 'white',
-                }}
-              >
-                Proceed to Payment
-              </Button>
+              <>
+                <Payment />
+              </>
             )}
           </Box>
         </Box>

@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 
 import '../css/findDoctor.css';
+// import notFoundImage from '../assets/images/notFound.jpeg';
 
 export const FindDoctor = () => {
   const [doctor, setDoctor] = React.useState([]);
@@ -23,7 +24,7 @@ export const FindDoctor = () => {
   const navigate = useNavigate();
 
   const searchDoctor = async (e) => {
-    if (e.code === 'Enter') {
+    if (e.code === 'Enter' && e.target.value !== '') {
       const doctors = await axiosClient.get(
         'es/results?doctor=' + e.target.value
       );
@@ -32,7 +33,7 @@ export const FindDoctor = () => {
   };
 
   const SearchCity = async (e) => {
-    if (e.code === 'Enter') {
+    if (e.code === 'Enter' && e.target.value !== '') {
       const city = cities.filter((x) =>
         x.toLowerCase().includes(e.target.value.toLowerCase())
       );
@@ -55,32 +56,44 @@ export const FindDoctor = () => {
 
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Autocomplete
-            freeSolo
-            autoComplete
-            autoHighlight
-            options={doctor.length ? doctor.map((doc) => doc.firstName) : []}
-            onKeyDown={(e) => searchDoctor(e)}
-            renderInput={(params) => (
-              <TextField {...params} variant="outlined" label="Find Doctor" />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Autocomplete
-            freeSolo
-            autoComplete
-            autoHighlight
-            renderInput={(params) => (
-              <TextField {...params} variant="outlined" label="City" />
-            )}
-            options={city.map((c) => c)}
-            onKeyDown={(e) => SearchCity(e)}
-          />
-        </Grid>
-      </Grid>
+      <Card sx={{ display: 'flex' }} class="card-pos">
+        <CardContent sx={{ flex: '1 0 auto' }}>
+          <Grid container spacing={0}>
+            <Grid item xs={8}>
+              <Autocomplete
+                class="input-field"
+                freeSolo
+                autoComplete
+                autoHighlight
+                options={
+                  doctor.length ? doctor.map((doc) => doc.firstName) : []
+                }
+                onKeyDown={(e) => searchDoctor(e)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Find Doctor"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Autocomplete
+                class="input-field"
+                freeSolo
+                autoComplete
+                autoHighlight
+                renderInput={(params) => (
+                  <TextField {...params} variant="outlined" label="City" />
+                )}
+                options={city.map((c) => c)}
+                onKeyDown={(e) => SearchCity(e)}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
       <Grid container spacing={2}>
         {doctor.length ? (
           doctor.map((doc) => (
@@ -116,8 +129,9 @@ export const FindDoctor = () => {
             </Grid>
           ))
         ) : (
-          <Typography variant="h6" component="h6">
-            No results found
+          <Typography variant="h4" component="h4">
+            <span class="no-doctor">No Doctor found</span>
+            {/* <img src={notFoundImage} alt="not found"></img> */}
           </Typography>
         )}
       </Grid>
