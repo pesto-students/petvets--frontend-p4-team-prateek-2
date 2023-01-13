@@ -26,7 +26,6 @@ const Payment = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     openModal() {
       handleClickOpen();
-      console.log('payment');
     },
   }));
 
@@ -50,7 +49,7 @@ const Payment = forwardRef((props, ref) => {
     },
     validationSchema: PaymentSchema,
     onSubmit: (values, { setSubmitting }) => {
-      props.captureDetails(values);
+      props.capturePaymentDetails(values);
     },
   });
 
