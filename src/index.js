@@ -8,6 +8,7 @@ import { App } from './App';
 import AdminDoctor from './components/AdminDoctor';
 import AllDoctors from './components/AllDoctors';
 import { AppointmentHistory } from './components/AppointmentHistory';
+import Blog from './components/Blog';
 import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
 import { ShowDoctor } from './components/ShowDoctor';
@@ -37,10 +38,22 @@ const router = createBrowserRouter([
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
       {
+        path: '/allDoctors/:userId',
+        element: <AdminDoctor />,
+      },
+      {
         path: '/findDoctor/:id',
         element: (
           <ProtectedRoute>
             <ShowDoctor />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/blog',
+        element: (
+          <ProtectedRoute>
+            <Blog />
           </ProtectedRoute>
         ),
       },
@@ -69,10 +82,6 @@ const router = createBrowserRouter([
         ),
       },
     ],
-  },
-  {
-    path: '/allDoctors/:userId',
-    element: <AdminDoctor />,
   },
 ]);
 

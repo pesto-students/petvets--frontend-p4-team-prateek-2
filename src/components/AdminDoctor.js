@@ -3,6 +3,7 @@ import { useMutation, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { sendApprovalEmail } from '../actions/doctors.actions';
 import { getUserAPI } from '../actions/users.actions';
+import { UserProfile } from './UserProfile';
 
 const AdminDoctor = () => {
   const { userId } = useParams();
@@ -20,9 +21,7 @@ const AdminDoctor = () => {
   });
   return (
     <>
-      <h1>
-        I am Dr. {userData?.firstName} {userData?.lastName}
-      </h1>
+      <UserProfile />
       <Button
         variant="contained"
         color="success"

@@ -12,9 +12,9 @@ import {
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/de';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -40,6 +40,21 @@ const BasicDetails = () => {
   const [avatar, setAvatar] = useState('');
   const [image, setImage] = useState({ preview: '', raw: '' });
   const { userId, userData } = useSelector((state) => state.authStatus);
+  const storage = getStorage();
+
+  useEffect(() => {
+    const fetchProfilePic = async () => {
+      try {
+        const profilePath = userData.profileURL;
+        const storageRef = ref(storage, profilePath);
+        const url = await getDownloadURL(storageRef);
+        setImage({ ...image, preview: url });
+      } catch (error) {
+        setImage({ ...image, preview: '/Avatar.jpg' });
+      }
+    };
+    fetchProfilePic();
+  }, [storage, userId, userData]);
 
   const initialValues = {
     firstName: userData?.firstName,
@@ -58,15 +73,18 @@ const BasicDetails = () => {
     }
   };
 
-  const storage = getStorage();
-  const storageRef = ref(storage, `${userId}/${image.raw.name}`);
-
   const handleFileUpload = (e) => {
     e.preventDefault();
     const formData = new FormData();
+    const imgType = image.raw.name.split('.').at(-1);
     formData.append('image', image.raw);
-    // 'file' comes from the Blob or File API
+    const imgPath = `${userId}/profile.${imgType}`;
+    const storageRef = ref(storage, imgPath);
     uploadBytes(storageRef, image.raw).then((snapshot) => {
+      userUpdate.mutate({
+        userId,
+        profileURL: imgPath,
+      });
       console.log('Uploaded a blob or file!');
     });
   };
@@ -74,6 +92,9 @@ const BasicDetails = () => {
   const userUpdate = useMutation(updateUserProfileAPI, {
     onSuccess: (data) => {
       console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
 
@@ -91,35 +112,40 @@ const BasicDetails = () => {
   });
   return (
     <>
-      <div>
-        <label htmlFor="upload-button">
-          {image.preview ? (
-            <img src={image.preview} alt="dummy" width="300" height="300" />
-          ) : (
-            <>
-              <img
-                src="https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
-                alt="Avatar"
-              />
-              <h5 className="text-center">Upload your photo</h5>
-            </>
-          )}
-        </label>
-        <input
-          type="file"
-          id="upload-button"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
-        <br />
-        <Button variant="contained" onClick={handleFileUpload}>
-          {' '}
-          Update Image
-        </Button>
-      </div>
-      <br />
-      <br />
       <form onSubmit={formik.handleSubmit} method="post">
+        <Grid
+          item
+          xs={12}
+          sm={5}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            marginBottom: '1rem',
+          }}
+        >
+          <label htmlFor="upload-button">
+            <img
+              src={image.preview}
+              alt="dummy"
+              width={150}
+              height={150}
+              style={{ borderRadius: '50%' }}
+            />
+          </label>
+          <input
+            type="file"
+            id="upload-button"
+            style={{ display: 'none' }}
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          <br />
+          <Button variant="contained" onClick={handleFileUpload}>
+            {' '}
+            Update Image
+          </Button>
+        </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField

@@ -22,7 +22,12 @@ const columns = [
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     width: 150,
-    renderCell: (params) => <Link to={`${params.row.id}`}>Open</Link>,
+    // renderCell: (params) => <Navigate to={`${params.row.id}`}>Open</Navigate>,
+    renderCell: (params) => (
+      <Link className="link black" to={`${params.row.id}`}>
+        Open
+      </Link>
+    ),
   },
 ];
 
@@ -46,7 +51,6 @@ const AllDoctors = () => {
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
-        checkboxSelection
       />
     </div>
   );
