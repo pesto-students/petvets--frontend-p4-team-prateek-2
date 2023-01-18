@@ -7,13 +7,15 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { App } from './App';
 import AdminDoctor from './components/AdminDoctor';
 import AllDoctors from './components/AllDoctors';
-import { FindDoctor } from './components/FindDoctor';
 import { AppointmentHistory } from './components/AppointmentHistory';
+import Blog from './components/Blog';
+import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
 import { ShowDoctor } from './components/ShowDoctor';
 import { HomeContent } from './components/homeContent';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
+import { UserProfile } from './components/UserProfile';
 import { auth } from './firebaseConfig';
 import './index.css';
 import { ProtectedRoute } from './ProtectedRoute';
@@ -37,10 +39,22 @@ const router = createBrowserRouter([
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
       {
+        path: '/allDoctors/:userId',
+        element: <AdminDoctor />,
+      },
+      {
         path: '/findDoctor/:id',
         element: (
           <ProtectedRoute>
             <ShowDoctor />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/blog',
+        element: (
+          <ProtectedRoute>
+            <Blog />
           </ProtectedRoute>
         ),
       },
@@ -69,6 +83,14 @@ const router = createBrowserRouter([
   {
     path: '/allDoctors/:userId',
     element: <AdminDoctor />,
+  },
+  {
+    path: '/profile',
+    element: (
+      <ProtectedRoute>
+        <UserProfile />
+      </ProtectedRoute>
+    ),
   },
 ]);
 
