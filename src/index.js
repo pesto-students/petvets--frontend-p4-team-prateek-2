@@ -20,9 +20,19 @@ import { auth } from './firebaseConfig';
 import './index.css';
 import { ProtectedRoute } from './ProtectedRoute';
 import { signin, signout } from './reducers/auth.reducer';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { store } from './store';
 
 export const queryClient = new QueryClient();
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#42a5f5',
+      contrastText: 'white',
+    },
+  },
+});
 
 const router = createBrowserRouter([
   { path: '/userSignUp', element: <SignUp role="user" /> },
@@ -32,9 +42,11 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <ProtectedRoute>
-        <App />
-      </ProtectedRoute>
+      <ThemeProvider theme={theme}>
+        <ProtectedRoute>
+          <App />
+        </ProtectedRoute>
+      </ThemeProvider>
     ),
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
@@ -45,9 +57,11 @@ const router = createBrowserRouter([
       {
         path: '/findDoctor/:id',
         element: (
-          <ProtectedRoute>
-            <ShowDoctor />
-          </ProtectedRoute>
+          <ThemeProvider theme={theme}>
+            <ProtectedRoute>
+              <ShowDoctor />
+            </ProtectedRoute>
+          </ThemeProvider>
         ),
       },
       {

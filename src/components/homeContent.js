@@ -2,21 +2,59 @@ import React from 'react';
 import axiosClient from '../api-client';
 import { cities } from '../utils/cities';
 import '../css/home.css';
-import image from '../assets/images/docImage.jpeg';
+import image from '../assets/images/animal.jpg';
+import cowImage from '../assets/images/cow-custom.svg';
+import Blog from './Blog';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
-  Container,
   Card,
   CardContent,
   Grid,
   Autocomplete,
   TextField,
   Button,
+  CardActionArea,
+  Typography,
 } from '@mui/material';
 
 export const HomeContent = () => {
   const [doctor, setDoctor] = React.useState([]);
   const [city, setCity] = React.useState([]);
+  const navigate = useNavigate();
+  const category = [
+    {
+      id: 1,
+      name: 'dog',
+      icon: <i className="fas fa-dog icon"></i>,
+    },
+    {
+      id: 2,
+      name: 'cat',
+      icon: <i className="fas fa-cat icon"></i>,
+    },
+    {
+      id: 3,
+      name: 'bird',
+      icon: <i className="fas fa-dove icon"></i>,
+    },
+    {
+      id: 4,
+      name: 'cattle',
+      icon: (
+        <img
+          src={cowImage}
+          className="icon"
+          style={{ height: '100px' }}
+          alt="cow"
+        />
+      ),
+    },
+  ];
+
+  const findDoctor = (name) => {
+    navigate('/findDoctor/?cat=' + name);
+  };
 
   const SearchCity = async (e) => {
     if (e.code === 'Enter') {
@@ -36,11 +74,11 @@ export const HomeContent = () => {
   };
   return (
     <>
-      <div class="home-banner">
-        <img src={image} alt="" class="banner-img" />
-        <div class="banner__content">
-          <h1 class="banner-text">Find the best</h1>
-          <h1 class="banner-text">vet near by you</h1>
+      <div className="home-banner">
+        <img src={image} alt="" className="banner-img" />
+        <div className="banner__content">
+          <h1 className="banner-text">Find the best</h1>
+          <h1 className="banner-text">vet near by you</h1>
         </div>
       </div>
       <Card sx={{ display: 'flex' }} class="banner-card">
@@ -49,7 +87,7 @@ export const HomeContent = () => {
             <Grid container spacing={0}>
               <Grid item xs={6}>
                 <Autocomplete
-                  class="input"
+                  className="input"
                   freeSolo
                   autoComplete
                   autoHighlight
@@ -68,7 +106,7 @@ export const HomeContent = () => {
               </Grid>
               <Grid item xs={4}>
                 <Autocomplete
-                  class="input"
+                  className="input"
                   freeSolo
                   autoComplete
                   autoHighlight
@@ -80,13 +118,45 @@ export const HomeContent = () => {
                 />
               </Grid>
               <Grid item xs={2}>
-                <Button size="small" variant="contained" class="search-btn">
+                <Button size="small" variant="contained" className="search-btn">
                   Find Now
                 </Button>
               </Grid>
             </Grid>
           </CardContent>
         </Box>
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+          marginTop="5%"
+        >
+          {category.map((cat) => (
+            <Grid item xs={12} sm={6} md={3} key={cat.id}>
+              <Card
+                sx={{ maxWidth: 245 }}
+                className="card"
+                style={{ backgroundColor: 'white' }}
+                onClick={() => findDoctor(cat.name)}
+              >
+                <CardActionArea>
+                  <CardContent>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      class="icon-pos"
+                    >
+                      {cat.icon}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+        <Blog></Blog>
       </Card>
     </>
   );

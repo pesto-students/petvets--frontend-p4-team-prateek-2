@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axiosClient from '../api-client';
 import '../css/showDoctor.css';
 
@@ -18,7 +18,10 @@ import {
   StepLabel,
   Stack,
   TextField,
+  Snackbar,
+  IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -35,6 +38,10 @@ export const ShowDoctor = () => {
   const [active, setActive] = React.useState(false);
   const [doctor, setDoctor] = React.useState([]);
   const { userData: user } = useSelector((state) => state.authStatus);
+  const [snackMessage, setSnackMessage] = React.useState('');
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const navigate = useNavigate();
 
   const steps = ['Select Date & Time', 'Add Details', 'Booking Confirmation'];
   const [activeStep, setActiveStep] = React.useState(0);
@@ -173,7 +180,7 @@ export const ShowDoctor = () => {
 
   const validateInput = (e) => {
     let { name, value } = e.target;
-
+    console.log(name, value, e);
     setFormData((prev) => {
       const stateObj = { ...prev };
 
@@ -182,17 +189,16 @@ export const ShowDoctor = () => {
       } else {
         stateObj[name].error = false;
       }
-
+      console.log(stateObj);
       return stateObj;
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const formFields = Object.keys(formData);
     let newFormValues = { ...formData };
-
+    console.log(newFormValues, formFields, e);
     for (let index = 0; index < formFields.length; index++) {
       const currentField = formFields[index];
       if (formData[currentField].error) {
@@ -204,6 +210,24 @@ export const ShowDoctor = () => {
     setActiveStep(2);
   };
 
+  const closeSnackbar = (event, reason) => {
+    if ('clickaway' === reason) return;
+    setOpenSnack(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={closeSnackbar}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
   const capturePaymentDetails = async (values) => {
     values.contactNo = formData.contact.value;
     values.petName = formData.petName.value;
@@ -213,7 +237,17 @@ export const ShowDoctor = () => {
     values.bookingDate = moment.utc(moment(selectedDate)).format();
     values.vetDetail = doctor;
     values.userDetail = user;
-    await axiosClient.post('api/payment/', values);
+    try {
+      await axiosClient.post('api/payment/', values);
+      setOpenSnack(true);
+      setSnackMessage('Payment Successful');
+      setOpenModal(false);
+      navigate('/myAppointments');
+    } catch (e) {
+      setOpenSnack(true);
+      setSnackMessage(e.response.data.msg.raw.message);
+      setOpenModal(true);
+    }
   };
 
   return (
@@ -413,17 +447,23 @@ export const ShowDoctor = () => {
               <Button
                 onClick={activeStep === 0 ? handleNext : handleSubmit}
                 disabled={activeStep === 0 && !selectedSlot}
-                style={{
-                  backgroundColor: selectedSlot ? '#1976d2' : 'grey',
-                  color: 'white',
-                }}
               >
                 Next
               </Button>
             )}
             {activeStep === 2 && (
               <>
-                <Payment capturePaymentDetails={capturePaymentDetails} />
+                <Payment
+                  capturePaymentDetails={capturePaymentDetails}
+                  openModal={openModal}
+                />
+                <Snackbar
+                  open={openSnack}
+                  autoHideDuration={6000}
+                  onClose={closeSnackbar}
+                  message={snackMessage}
+                  action={action}
+                />
               </>
             )}
           </Box>

@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
 import { signout } from '../reducers/auth.reducer';
+import Logo from '../assets/images/Logo.png';
 
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -36,9 +37,9 @@ export const Navbar = () => {
         const profilePath = userData.profileURL;
         const storageRef = ref(storage, profilePath);
         const url = await getDownloadURL(storageRef);
-        setImage({ ...image, preview: url });
+        // setImage({ ...image, preview: url });
       } catch (error) {
-        setImage({ ...image, preview: '/Avatar.jpg' });
+        // setImage({ ...image, preview: '/Avatar.jpg' });
       }
     };
     fetchProfilePic();
@@ -76,9 +77,7 @@ export const Navbar = () => {
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Link className="link white" to={'/'}>
-            <Typography variant="h6" noWrap>
-              LOGO
-            </Typography>
+            <img src={Logo} alt="logo" style={{ height: '55px' }} />
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Button

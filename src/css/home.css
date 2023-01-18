@@ -1,6 +1,6 @@
 .banner-img {
     height: 40rem;
-    max-width: 80rem;
+    width: 80rem;
     opacity: 0.5;
     object-fit: cover;
 }
@@ -16,7 +16,7 @@
     left: 0;
     width: 100%;
     height: 40rem;
-    background-color: rgba(25, 188, 210, 0.4);
+    background-color: rgba(66, 165, 245, 0.4);
 }
 
 .banner__content {
@@ -35,6 +35,8 @@
 .banner-text {
     color: white;
     text-transform: uppercase;
+    font-size: 42px;
+    font-family: "Heebo", sans-serif;
 }
 
 .banner-card {
@@ -44,6 +46,7 @@
     height: 100px;
     background: white;
     border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .input {
@@ -59,5 +62,15 @@
     font-size: 15px;
     border: 0px;
     color: white;
-    border-radius: 10px;
+}
+
+.icon {
+    font-size: 100px;
+    color: #42a5f5;
+}
+
+.icon-pos {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%
 }

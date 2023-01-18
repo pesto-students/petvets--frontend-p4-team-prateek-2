@@ -50,6 +50,7 @@ const Payment = forwardRef((props, ref) => {
     validationSchema: PaymentSchema,
     onSubmit: (values, { setSubmitting }) => {
       props.capturePaymentDetails(values);
+      setOpen(props.openModal);
     },
   });
 
