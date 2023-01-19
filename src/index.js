@@ -11,8 +11,8 @@ import { AppointmentHistory } from './components/AppointmentHistory';
 import Blog from './components/Blog';
 import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
-import { HomeContent } from './components/homeContent';
 import { ShowDoctor } from './components/ShowDoctor';
+import { HomeContent } from './components/homeContent';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
 import { UserProfile } from './components/UserProfile';
@@ -20,9 +20,19 @@ import { auth } from './firebaseConfig';
 import './index.css';
 import { ProtectedRoute } from './ProtectedRoute';
 import { signin, signout } from './reducers/auth.reducer';
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { store } from './store';
 
 export const queryClient = new QueryClient();
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#42a5f5',
+      contrastText: 'white',
+    },
+  },
+});
 
 const router = createBrowserRouter([
   { path: '/userSignUp', element: <SignUp role="user" /> },
@@ -32,13 +42,14 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <ProtectedRoute>
-        <App />
-      </ProtectedRoute>
+      <ThemeProvider theme={theme}>
+        <ProtectedRoute>
+          <App />
+        </ProtectedRoute>
+      </ThemeProvider>
     ),
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
-      { path: '/', element: <HomeContent /> },
       {
         path: '/allDoctors/:userId',
         element: <AdminDoctor />,
@@ -46,9 +57,11 @@ const router = createBrowserRouter([
       {
         path: '/findDoctor/:id',
         element: (
-          <ProtectedRoute>
-            <ShowDoctor />
-          </ProtectedRoute>
+          <ThemeProvider theme={theme}>
+            <ProtectedRoute>
+              <ShowDoctor />
+            </ProtectedRoute>
+          </ThemeProvider>
         ),
       },
       {
@@ -76,14 +89,22 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/profile',
-        element: (
-          <ProtectedRoute>
-            <UserProfile />
-          </ProtectedRoute>
-        ),
+        path: '/',
+        element: <HomeContent />,
       },
     ],
+  },
+  {
+    path: '/allDoctors/:userId',
+    element: <AdminDoctor />,
+  },
+  {
+    path: '/profile',
+    element: (
+      <ProtectedRoute>
+        <UserProfile />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

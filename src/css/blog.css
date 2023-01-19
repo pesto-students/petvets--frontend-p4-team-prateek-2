@@ -1,0 +1,11 @@
+.blog-heading {
+    text-align: center;
+    margin-top: 5%;
+    color: #42a5f5;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.blog-subhead {
+    text-align: center;
+}

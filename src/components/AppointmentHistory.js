@@ -1,16 +1,16 @@
-import React from 'react';
-import axiosClient from '../api-client';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
-  Button,
-  Typography,
   Grid,
+  Typography,
 } from '@mui/material';
+import moment from 'moment';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import axiosClient from '../api-client';
 
 export const AppointmentHistory = () => {
   const { userData: user } = useSelector((state) => state.authStatus);
@@ -92,7 +92,9 @@ export const AppointmentHistory = () => {
         <Typography variant="h6" component="h6">
           You don't have any appointments yet!! <br />
           <Button size="small" variant="contained">
-            Book Appointment
+            <Link to={'/findDoctor'} className="link white">
+              Book Appointment
+            </Link>
           </Button>
         </Typography>
       )}
