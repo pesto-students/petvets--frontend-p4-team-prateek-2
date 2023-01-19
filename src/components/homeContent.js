@@ -72,6 +72,7 @@ export const HomeContent = () => {
       setDoctor(doctors.data);
     }
   };
+
   return (
     <>
       <div className="home-banner">

@@ -1,25 +1,23 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
+import axiosClient from '../api-client';
 
 const BlogDetail = (props) => {
-  const { title, description, author, authorImg, date } = props.blog;
-  return (
-    <div className=" blog-card col-md-4 col-sm-6 col-12">
-      <div className="card shadow-lg">
-        <div className="card-header d-flex align-itmes-center ">
-          <img src={authorImg} width="50px" alt="" />
-          <div>
-            <h6 className="text-primary">{author}</h6>
-            <p className="m-0">{date}</p>
-          </div>
-        </div>
-        <div className="card-body">
-          <h5>{title}</h5>
-          <p className="card-text text-secondary mt-4">{description}</p>
-          <a href="!#">Read More</a>
-        </div>
-      </div>
-    </div>
-  );
+  const [params] = useSearchParams();
+  const [blogData, setBlogData] = React.useState({ __html: '' });
+  const link = params.get('link');
+
+  React.useEffect(() => {
+    const getBlogs = async () => {
+      const blogDetail = await axiosClient.get(
+        'api/blogs/blogDetail?link=' + link
+      );
+      setBlogData({ __html: blogDetail.data });
+    };
+    getBlogs();
+  }, [link]);
+
+  return <div dangerouslySetInnerHTML={blogData} />;
 };
 
 export default BlogDetail;

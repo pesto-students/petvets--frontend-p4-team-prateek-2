@@ -15,6 +15,7 @@ import { ShowDoctor } from './components/ShowDoctor';
 import { HomeContent } from './components/homeContent';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
+import BlogDetail from './components/BlogDetail';
 import { UserProfile } from './components/UserProfile';
 import { auth } from './firebaseConfig';
 import './index.css';
@@ -85,6 +86,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <AppointmentHistory />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/blogDetail',
+        element: (
+          <ProtectedRoute>
+            <BlogDetail />
           </ProtectedRoute>
         ),
       },
