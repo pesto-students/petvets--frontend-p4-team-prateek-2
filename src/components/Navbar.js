@@ -36,13 +36,13 @@ export const Navbar = () => {
         const profilePath = userData.profileURL;
         const storageRef = ref(storage, profilePath);
         const url = await getDownloadURL(storageRef);
-        setImage({ ...image, preview: url });
+        // setImage({ ...image, preview: url });
       } catch (error) {
-        setImage({ ...image, preview: '/Avatar.jpg' });
+        // setImage({ ...image, preview: '/Avatar.jpg' });
       }
     };
     fetchProfilePic();
-  }, [storage, userId, userData, image]);
+  }, [storage, userId, userData, image, setImage]);
 
   const handleSignOut = async () => {
     try {

@@ -11,6 +11,7 @@ import { AppointmentHistory } from './components/AppointmentHistory';
 import Blog from './components/Blog';
 import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
+import { HomeContent } from './components/homeContent';
 import { ShowDoctor } from './components/ShowDoctor';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
+      { path: '/', element: <HomeContent /> },
       {
         path: '/allDoctors/:userId',
         element: <AdminDoctor />,
