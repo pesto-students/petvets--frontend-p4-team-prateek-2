@@ -39,7 +39,12 @@ export const Navbar = () => {
         const url = await getDownloadURL(storageRef);
         setImage({ ...image, preview: url });
       } catch (error) {
-        setImage({ ...image, preview: '/Avatar.jpg' });
+        if (error.code === 'storage/invalid-url') {
+          const profilePath = userData.profileURL;
+          setImage({ ...image, preview: profilePath });
+        } else {
+          setImage({ ...image, preview: '/Avatar.jpg' });
+        }
       }
     };
     fetchAvatar();

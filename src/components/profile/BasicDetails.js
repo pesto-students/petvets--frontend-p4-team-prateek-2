@@ -49,7 +49,12 @@ const BasicDetails = () => {
         const url = await getDownloadURL(storageRef);
         setImage({ ...image, preview: url });
       } catch (error) {
-        setImage({ ...image, preview: '/Avatar.jpg' });
+        if (error.code === 'storage/invalid-url') {
+          const profilePath = userData.profileURL;
+          setImage({ ...image, preview: profilePath });
+        } else {
+          setImage({ ...image, preview: '/Avatar.jpg' });
+        }
       }
     };
     fetchProfilePic();
@@ -155,7 +160,6 @@ const BasicDetails = () => {
             onChange={handleFileChange}
           />
           <br />
-          {console.log(image)}
           <Button variant="outlined" component="label">
             Upload Profile Pic
             <input
@@ -166,23 +170,6 @@ const BasicDetails = () => {
               onChange={handleFileChange}
             />
           </Button>
-          {/* {image.preview === '/Avatar.jpg' ? (
-            <Button variant="outlined" component="label">
-              Upload Profile Pic
-              <input
-                type="file"
-                id="upload-button"
-                style={{ display: 'none' }}
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-            </Button>
-          ) : (
-            <Button variant="outlined" onClick={handleFileUpload}>
-              {' '}
-              Update Image
-            </Button>
-          )} */}
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
