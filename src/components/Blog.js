@@ -1,20 +1,15 @@
-import React from 'react';
-import watson from '../assets/images/team-2.jpg';
-import BlogDetail from './BlogDetail';
-import '../css/blog.css';
 import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Autocomplete,
-  TextField,
   Button,
-  CardMedia,
+  Card,
   CardActions,
-  CardActionArea,
+  CardContent,
+  CardMedia,
+  Grid,
   Typography,
 } from '@mui/material';
+import React from 'react';
+import watson from '../assets/images/team-2.jpg';
+import '../css/blog.css';
 
 const blogData = [
   {
@@ -46,17 +41,17 @@ const blogData = [
 const Blog = () => (
   <>
     <>
-      <Typography variant="h5" component="h2" class="blog-heading">
+      <Typography variant="h5" component="h2" className="blog-heading">
         Our Blogs
       </Typography>
-      <Typography variant="h3" component="h2" class="blog-subhead">
+      <Typography variant="h3" component="h2" className="blog-subhead">
         From Our Blog News
       </Typography>
     </>
     <Grid container spacing={2} style={{ marginTop: '15px' }}>
-      {blogData.map((blog) => (
-        <Grid item xs={4}>
-          <Card sx={{ maxWidth: 345 }} key="doc._id" classNameName="card">
+      {blogData.map((blog, index) => (
+        <Grid key={index} item xs={4}>
+          <Card sx={{ maxWidth: 345 }} key="doc._id" className="card">
             <CardMedia sx={{ height: 140 }} image={blog.authorImg} src="" />
             <CardContent>
               <Typography variant="h6" color="text.secondary">

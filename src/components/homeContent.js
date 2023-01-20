@@ -1,22 +1,22 @@
-import React from 'react';
-import axiosClient from '../api-client';
-import { cities } from '../utils/cities';
-import '../css/home.css';
-import image from '../assets/images/animal.jpg';
-import cowImage from '../assets/images/cow-custom.svg';
-import Blog from './Blog';
-import { useNavigate } from 'react-router-dom';
 import {
+  Autocomplete,
   Box,
+  Button,
   Card,
+  CardActionArea,
   CardContent,
   Grid,
-  Autocomplete,
   TextField,
-  Button,
-  CardActionArea,
   Typography,
 } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosClient from '../api-client';
+import image from '../assets/images/animal.jpg';
+import cowImage from '../assets/images/cow-custom.svg';
+import '../css/home.css';
+import { cities } from '../utils/cities';
+import Blog from './Blog';
 
 export const HomeContent = () => {
   const [doctor, setDoctor] = React.useState([]);
@@ -81,7 +81,7 @@ export const HomeContent = () => {
           <h1 className="banner-text">vet near by you</h1>
         </div>
       </div>
-      <Card sx={{ display: 'flex' }} class="banner-card">
+      <Card sx={{ display: 'flex' }} className="banner-card">
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <CardContent sx={{ flex: '1 0 auto' }}>
             <Grid container spacing={0}>
@@ -146,7 +146,7 @@ export const HomeContent = () => {
                     <Typography
                       variant="body2"
                       color="text.secondary"
-                      class="icon-pos"
+                      className="icon-pos"
                     >
                       {cat.icon}
                     </Typography>

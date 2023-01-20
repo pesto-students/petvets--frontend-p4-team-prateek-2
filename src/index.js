@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { onAuthStateChanged } from 'firebase/auth';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -11,8 +12,8 @@ import { AppointmentHistory } from './components/AppointmentHistory';
 import Blog from './components/Blog';
 import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
-import { ShowDoctor } from './components/ShowDoctor';
 import { HomeContent } from './components/homeContent';
+import { ShowDoctor } from './components/ShowDoctor';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
 import { UserProfile } from './components/UserProfile';
@@ -20,7 +21,6 @@ import { auth } from './firebaseConfig';
 import './index.css';
 import { ProtectedRoute } from './ProtectedRoute';
 import { signin, signout } from './reducers/auth.reducer';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { store } from './store';
 
 export const queryClient = new QueryClient();
@@ -39,6 +39,7 @@ const router = createBrowserRouter([
   { path: '/doctorSignUp', element: <SignUp role="doctor" /> },
   { path: '/signIn', element: <SignIn /> },
   { path: '/forgotPassword', element: <ForgotPassword /> },
+
   {
     path: '/',
     element: (
@@ -92,19 +93,19 @@ const router = createBrowserRouter([
         path: '/',
         element: <HomeContent />,
       },
+      {
+        path: '/profile',
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/allDoctors/:userId',
+        element: <AdminDoctor />,
+      },
     ],
-  },
-  {
-    path: '/allDoctors/:userId',
-    element: <AdminDoctor />,
-  },
-  {
-    path: '/profile',
-    element: (
-      <ProtectedRoute>
-        <UserProfile />
-      </ProtectedRoute>
-    ),
   },
 ]);
 

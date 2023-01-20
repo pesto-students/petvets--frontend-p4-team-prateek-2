@@ -18,9 +18,9 @@ import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../assets/images/Logo.png';
 import { auth } from '../firebaseConfig';
 import { signout } from '../reducers/auth.reducer';
-import Logo from '../assets/images/Logo.png';
 
 export const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -32,18 +32,19 @@ export const Navbar = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchProfilePic = async () => {
+    const fetchAvatar = async () => {
       try {
         const profilePath = userData.profileURL;
         const storageRef = ref(storage, profilePath);
         const url = await getDownloadURL(storageRef);
-        // setImage({ ...image, preview: url });
+        setImage({ ...image, preview: url });
       } catch (error) {
-        // setImage({ ...image, preview: '/Avatar.jpg' });
+        setImage({ ...image, preview: '/Avatar.jpg' });
       }
     };
-    fetchProfilePic();
-  }, [storage, userId, userData, image]);
+    fetchAvatar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData.profileURL]);
 
   const handleSignOut = async () => {
     try {
