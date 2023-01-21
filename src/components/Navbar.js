@@ -86,22 +86,26 @@ export const Navbar = () => {
             <img src={Logo} alt="logo" style={{ height: '55px' }} />
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              <Link className="link white" to={'findDoctor'}>
-                Find Doctor
-              </Link>
-            </Button>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              <Link className="link white" to={'blog'}>
-                Blog
-              </Link>
-            </Button>
+            {userData?.role === 'user' ? (
+              <>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  <Link className="link white" to={'findDoctor'}>
+                    Find Doctor
+                  </Link>
+                </Button>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  <Link className="link white" to={'blog'}>
+                    Blog
+                  </Link>
+                </Button>
+              </>
+            ) : null}
 
             {userData?.role === 'admin' ? (
               <Button

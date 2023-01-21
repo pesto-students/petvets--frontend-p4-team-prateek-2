@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import { useQuery } from 'react-query';
@@ -15,18 +16,46 @@ const columns = [
       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
   { field: 'email', headerName: 'Email', width: 200 },
-  { field: 'status', headerName: 'Status', width: 150 },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 150,
+    renderCell: (params) => {
+      if (params.value === 'pending') {
+        return (
+          <Button variant="contained" color="secondary">
+            Pending
+          </Button>
+        );
+      }
+      if (params.value === 'approved') {
+        return (
+          <Button variant="contained" color="success">
+            Approved
+          </Button>
+        );
+      }
+      if (params.value === 'rejected') {
+        return (
+          <Button variant="contained" color="error">
+            Rejected
+          </Button>
+        );
+      }
+    },
+  },
   {
     field: 'id',
     headerName: 'Link to Open',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     width: 150,
-    // renderCell: (params) => <Navigate to={`${params.row.id}`}>Open</Navigate>,
     renderCell: (params) => (
-      <Link className="link black" to={`${params.row.id}`}>
-        Open
-      </Link>
+      <Button variant="contained">
+        <Link className="link white" to={`${params.row.id}`}>
+          Open
+        </Link>
+      </Button>
     ),
   },
 ];

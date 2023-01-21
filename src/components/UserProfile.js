@@ -8,7 +8,7 @@ import BasicDetails from './profile/BasicDetails';
 import ClinicDetails from './profile/ClinicDetails';
 import EducationalDetails from './profile/EducationalDetails';
 
-export const UserProfile = () => {
+export const UserProfile = ({ userId }) => {
   const dispatch = useDispatch();
   const { activeStep } = useSelector((state) => state.navStatus);
   const profileComponents = {
@@ -17,7 +17,8 @@ export const UserProfile = () => {
     2: <ClinicDetails />,
   };
 
-  // console.log(formik);
+  console.log(userId);
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper nonLinear activeStep={activeStep}>
