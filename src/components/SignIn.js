@@ -1,8 +1,6 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { LoadingButton } from '@mui/lab';
 import {
   Alert,
-  Avatar,
   Box,
   Checkbox,
   Container,
@@ -17,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import Logo from '../assets/images/Logo.png';
 import { auth } from '../firebaseConfig';
 import { Copyright } from '../MuiComponents/Copyright';
 
@@ -108,9 +107,7 @@ export const SignIn = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          <img src={Logo} alt="logo" style={{ height: '100px' }} />
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>

@@ -1,8 +1,6 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { LoadingButton } from '@mui/lab';
 import {
   Alert,
-  Avatar,
   Box,
   Checkbox,
   Container,
@@ -13,7 +11,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
@@ -21,6 +18,7 @@ import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { createUserAPI } from '../actions/users.actions';
+import Logo from '../assets/images/Logo.png';
 import { auth } from '../firebaseConfig';
 import { Copyright } from '../MuiComponents/Copyright';
 import { fetchUser } from '../reducers/auth.reducer';
@@ -175,9 +173,7 @@ export const SignUp = (props) => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          <img src={Logo} alt="logo" style={{ height: '80px' }} />
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>

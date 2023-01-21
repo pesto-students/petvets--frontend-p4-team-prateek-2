@@ -1,21 +1,20 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
-  Grid,
-  Typography,
   CircularProgress,
-  Box,
+  Grid,
   Modal,
+  Typography,
 } from '@mui/material';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import { styled } from '@mui/system';
 import moment from 'moment';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../api-client';
-import { styled } from '@mui/system';
 
 export const AppointmentHistory = () => {
   const { userData: user } = useSelector((state) => state.authStatus);
@@ -25,6 +24,7 @@ export const AppointmentHistory = () => {
   const [contact, setContact] = React.useState(false);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
+  const { role } = user;
 
   React.useEffect(() => {
     setLoading(true);
@@ -117,8 +117,7 @@ export const AppointmentHistory = () => {
           </Typography>
         </Box>
       </Modal>
-      {appointments.length &&
-        !loading &&
+      {appointments.length && !loading ? (
         appointments.map((app) => (
           <Card sx={{}} key="app._id" className="card">
             <CardContent>
@@ -173,15 +172,17 @@ export const AppointmentHistory = () => {
               </Grid>
             </CardContent>
           </Card>
-        ))}
-      {!appointments.length && !loading && (
+        ))
+      ) : (
         <Typography variant="h6" component="h6">
           You don't have any appointments yet!! <br />
-          <Button size="small" variant="contained">
-            <Link to={'/findDoctor'} className="link white">
-              Book Appointment
-            </Link>
-          </Button>
+          {role === 'doctor' ? null : (
+            <Button size="small" variant="contained">
+              <Link to={'/findDoctor'} className="link white">
+                Book Appointment
+              </Link>
+            </Button>
+          )}
         </Typography>
       )}
     </>

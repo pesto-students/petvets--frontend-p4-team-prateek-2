@@ -9,6 +9,7 @@ import AdminDoctor from './components/AdminDoctor';
 import AllDoctors from './components/AllDoctors';
 import { AppointmentHistory } from './components/AppointmentHistory';
 import Blog from './components/Blog';
+import BlogDetail from './components/BlogDetail';
 import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
 import { Home } from './components/Home';
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: '/blogDetail',
+        element: (
+          <ProtectedRoute>
+            <BlogDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: '/findDoctor',
         element: (
           <ProtectedRoute>
@@ -88,10 +97,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      // {
-      //   path: '/',
-      //   element: <HomeContent />,
-      // },
+
       {
         path: '/profile',
         element: (
