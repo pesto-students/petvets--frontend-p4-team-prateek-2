@@ -1,0 +1,21 @@
+.blog-heading {
+    text-align: center;
+    margin-top: 5%;
+    color: #42a5f5;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.blog-subhead {
+    text-align: center;
+}
+
+.blog-card {
+    max-height: 450px;
+    height: 450px;
+    margin: 10px;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
