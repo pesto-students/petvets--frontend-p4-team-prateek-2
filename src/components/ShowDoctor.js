@@ -80,19 +80,19 @@ export const ShowDoctor = () => {
     setBookNow(true);
   };
 
-  const disableWeekends = (date) => {
-    const day = date.$d.getDay();
-    if (doctor.constantDaysOff.length) {
-      return doctor.constantDaysOff.includes(day);
-    }
-    return [];
-  };
-
   const getBookedAppointments = (formattedDate) =>
     axiosClient
       .get(`api/appointments?vetId=${params.id}&date=${formattedDate}`)
       .then((res) => res.data)
       .catch((err) => err);
+
+  const disableWeekends = (date) => {
+    const day = date.$d.getDay();
+    if (doctor.clinicDaysOff.length) {
+      return doctor.clinicDaysOff.includes(day);
+    }
+    return [];
+  };
 
   const showSlots = async (date) => {
     const formattedDate = moment(date.$d).format('YYYY-MM-DD');
@@ -110,7 +110,6 @@ export const ShowDoctor = () => {
     }
 
     await getBookedAppointments(formattedDate).then((res) => {
-      console.log(res);
       setBookedSlots(res);
     });
   };
@@ -180,7 +179,6 @@ export const ShowDoctor = () => {
 
   const validateInput = (e) => {
     let { name, value } = e.target;
-    console.log(name, value, e);
     setFormData((prev) => {
       const stateObj = { ...prev };
 
@@ -189,7 +187,16 @@ export const ShowDoctor = () => {
       } else {
         stateObj[name].error = false;
       }
-      console.log(stateObj);
+      if (name === 'petAge' && value > 15) {
+        stateObj[name].error = true;
+        stateObj[name].errorMessage = 'Please enter a valid age';
+      } else if (name === 'contact') {
+        let expr = /^(0|91)?[6-9][0-9]{9}$/;
+        if (!expr.test(value)) {
+          stateObj[name].error = true;
+          stateObj[name].errorMessage = 'Invalid Mobile Number.';
+        }
+      }
       return stateObj;
     });
   };
@@ -198,7 +205,6 @@ export const ShowDoctor = () => {
     e.preventDefault();
     const formFields = Object.keys(formData);
     let newFormValues = { ...formData };
-    console.log(newFormValues, formFields, e);
     for (let index = 0; index < formFields.length; index++) {
       const currentField = formFields[index];
       if (formData[currentField].error) {
@@ -258,8 +264,9 @@ export const ShowDoctor = () => {
             <Grid item xs={4}>
               <CardMedia
                 sx={{ height: 140 }}
-                image={doctor.image}
+                image={doctor.profileURL}
                 title={doctor.firstName}
+                alt="vet image"
               />
             </Grid>
             <Grid item xs={8}>
@@ -384,6 +391,7 @@ export const ShowDoctor = () => {
                   name="petAge"
                   label="Pet's Age"
                   required
+                  type="number"
                   onChange={handleChange}
                   onBlur={validateInput}
                   value={formData.petAge.value}
@@ -446,7 +454,14 @@ export const ShowDoctor = () => {
             {activeStep < 2 && (
               <Button
                 onClick={activeStep === 0 ? handleNext : handleSubmit}
-                disabled={activeStep === 0 && !selectedSlot}
+                disabled={
+                  (activeStep === 0 && !selectedSlot) ||
+                  (activeStep === 1 &&
+                    (!formData.name.value ||
+                      !formData.petName.value ||
+                      !formData.petAge.value ||
+                      !formData.contact.value))
+                }
               >
                 Next
               </Button>
