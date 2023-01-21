@@ -1,3 +1,4 @@
+import { Chip } from '@mui/material';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
@@ -15,32 +16,20 @@ const columns = [
     valueGetter: (params) =>
       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
-  { field: 'email', headerName: 'Email', width: 200 },
+  { field: 'email', headerName: 'Email', width: 300 },
   {
     field: 'status',
     headerName: 'Status',
     width: 150,
     renderCell: (params) => {
       if (params.value === 'pending') {
-        return (
-          <Button variant="contained" color="secondary">
-            Pending
-          </Button>
-        );
+        return <Chip variant="contained" color="secondary" label="Pending" />;
       }
       if (params.value === 'approved') {
-        return (
-          <Button variant="contained" color="success">
-            Approved
-          </Button>
-        );
+        return <Chip variant="contained" color="success" label="Approved" />;
       }
       if (params.value === 'rejected') {
-        return (
-          <Button variant="contained" color="error">
-            Rejected
-          </Button>
-        );
+        return <Chip variant="contained" color="error" label="Rejected" />;
       }
     },
   },
@@ -52,7 +41,7 @@ const columns = [
     width: 150,
     renderCell: (params) => (
       <Button variant="contained">
-        <Link className="link white" to={`${params.row.id}`}>
+        <Link className="link white" to={`allDoctors/${params.row.id}`}>
           Open
         </Link>
       </Button>

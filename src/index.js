@@ -5,14 +5,13 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { App } from './App';
 import AdminDoctor from './components/AdminDoctor';
 import AllDoctors from './components/AllDoctors';
 import { AppointmentHistory } from './components/AppointmentHistory';
 import Blog from './components/Blog';
 import { FindDoctor } from './components/FindDoctor';
 import { ForgotPassword } from './components/ForgotPassword';
-import { HomeContent } from './components/homeContent';
+import { Home } from './components/Home';
 import { ShowDoctor } from './components/ShowDoctor';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
@@ -20,7 +19,7 @@ import { UserProfile } from './components/UserProfile';
 import { auth } from './firebaseConfig';
 import './index.css';
 import { ProtectedRoute } from './ProtectedRoute';
-import { signin, signout } from './reducers/auth.reducer';
+import { fetchUser } from './reducers/auth.reducer';
 import { store } from './store';
 
 export const queryClient = new QueryClient();
@@ -45,14 +44,14 @@ const router = createBrowserRouter([
     element: (
       <ThemeProvider theme={theme}>
         <ProtectedRoute>
-          <App />
+          <Home />
         </ProtectedRoute>
       </ThemeProvider>
     ),
     children: [
       { path: '/allDoctors', element: <AllDoctors /> },
       {
-        path: '/allDoctors/:userId',
+        path: '/allDoctors/:doctorId',
         element: <AdminDoctor />,
       },
       {
@@ -89,15 +88,15 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: '/',
-        element: <HomeContent />,
-      },
+      // {
+      //   path: '/',
+      //   element: <HomeContent />,
+      // },
       {
         path: '/profile',
         element: (
           <ProtectedRoute>
-            <UserProfile userId="" />
+            <UserProfile uid="" />
           </ProtectedRoute>
         ),
       },
@@ -108,11 +107,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 onAuthStateChanged(auth, (user) => {
-  if (user !== null) {
-    store.dispatch(signin(user.uid));
-  } else {
-    store.dispatch(signout());
-  }
+  store.dispatch(fetchUser(user));
   root.render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>

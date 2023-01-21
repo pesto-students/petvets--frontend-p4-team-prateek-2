@@ -52,6 +52,7 @@ const EducationalDetails = () => {
   const [education, setEducation] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const { userId, userData } = useSelector((state) => state.authStatus);
+  const { role } = userData;
 
   const initialValues = {
     collegeName: '',
@@ -104,9 +105,12 @@ const EducationalDetails = () => {
   return (
     <>
       <Grid item xs={12} sm={6}>
-        <Button variant="contained" onClick={() => setOpen(true)}>
-          Add Education
-        </Button>
+        {role === 'admin' ? null : (
+          <Button variant="contained" onClick={() => setOpen(true)}>
+            Add Education
+          </Button>
+        )}
+
         {education.length
           ? education.map((edu, index) => (
               <Accordion
@@ -316,13 +320,16 @@ const EducationalDetails = () => {
         </Grid>
         <Grid>
           <Button onClick={() => dispatch(nextStepper())}>Next</Button>
-          <Button
-            onClick={handleSave}
-            disabled={education.length === 0}
-            variant="contained"
-          >
-            Save
-          </Button>
+
+          {role !== 'admin' ? (
+            <Button
+              onClick={handleSave}
+              disabled={education.length === 0}
+              variant="contained"
+            >
+              Save
+            </Button>
+          ) : null}
         </Grid>
       </Box>
     </>

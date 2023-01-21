@@ -23,7 +23,7 @@ import { Navigate } from 'react-router-dom';
 import { createUserAPI } from '../actions/users.actions';
 import { auth } from '../firebaseConfig';
 import { Copyright } from '../MuiComponents/Copyright';
-import { storeUserData } from '../reducers/auth.reducer';
+import { fetchUser } from '../reducers/auth.reducer';
 
 const theme = createTheme();
 
@@ -115,9 +115,7 @@ export const SignUp = (props) => {
 
   const createUser = useMutation(createUserAPI, {
     onSuccess: (data, variables) => {
-      console.log(data);
-      console.log(variables);
-      dispatch(storeUserData(variables));
+      dispatch(fetchUser(variables.userId));
       setLoading(false);
       setRedirect(true);
     },

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   FormControlLabel,
@@ -9,6 +10,7 @@ import {
   RadioGroup,
   TextField,
 } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar/Snackbar';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/de';
@@ -35,11 +37,14 @@ const profileValidation = Yup.object({
     .required('Required'),
 });
 
-const BasicDetails = () => {
+const BasicDetails = ({ userId, userData }) => {
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
   const [image, setImage] = useState({ preview: '', raw: '' });
-  const { userId, userData } = useSelector((state) => state.authStatus);
+  const { userData: loginUserData } = useSelector((state) => state.authStatus);
   const storage = getStorage();
+  const { role } = loginUserData;
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     const fetchProfilePic = async () => {
@@ -92,22 +97,6 @@ const BasicDetails = () => {
     }
   };
 
-  const handleFileUpload = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    const imgType = image.raw.name.split('.').at(-1);
-    formData.append('image', image.raw);
-    const imgPath = `${userId}/profile.${imgType}`;
-    const storageRef = ref(storage, imgPath);
-    uploadBytes(storageRef, image.raw).then((snapshot) => {
-      userUpdate.mutate({
-        userId,
-        profileURL: imgPath,
-      });
-      console.log('Uploaded a blob or file!');
-    });
-  };
-
   const userUpdate = useMutation(updateUserProfileAPI, {
     onSuccess: (data) => {
       console.log(data);
@@ -126,11 +115,30 @@ const BasicDetails = () => {
         userId,
         ...values,
       });
+      setSnackbarMessage('User updated successfully');
+      setOpen(true);
       console.log(values);
     },
   });
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
   return (
     <>
+      <Snackbar
+        open={open}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <form onSubmit={formik.handleSubmit} method="post">
         <Grid
           item
@@ -152,16 +160,7 @@ const BasicDetails = () => {
               style={{ borderRadius: '50%' }}
             />
           </label>
-          <input
-            type="file"
-            id="upload-button"
-            style={{ display: 'none' }}
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-          <br />
-          <Button variant="outlined" component="label">
-            Upload Profile Pic
+          {role === 'admin' ? null : (
             <input
               type="file"
               id="upload-button"
@@ -169,7 +168,21 @@ const BasicDetails = () => {
               accept="image/*"
               onChange={handleFileChange}
             />
-          </Button>
+          )}
+
+          <br />
+          {role === 'admin' ? null : (
+            <Button variant="outlined" component="label">
+              Upload Profile Pic
+              <input
+                type="file"
+                id="upload-button"
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </Button>
+          )}
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -180,6 +193,7 @@ const BasicDetails = () => {
               id="firstName"
               name="firstName"
               label="First Name"
+              disabled={role === 'admin'}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.firstName}
@@ -197,6 +211,7 @@ const BasicDetails = () => {
               id="lastName"
               name="lastName"
               label="Last Name"
+              disabled={role === 'admin'}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.lastName}
@@ -214,10 +229,12 @@ const BasicDetails = () => {
                   formik.setFieldValue('dob', Date.parse(value))
                 }
                 name="dob"
+                disabled={role === 'admin'}
                 renderInput={(params) => (
                   <TextField
                     fullWidth
                     onBlur={formik.handleBlur}
+                    disabled={role === 'admin'}
                     error={formik.touched.dob && Boolean(formik.errors.dob)}
                     {...params}
                   />
@@ -235,6 +252,7 @@ const BasicDetails = () => {
               name="mobile"
               label="Mobile Number"
               onChange={formik.handleChange}
+              disabled={role === 'admin'}
               onBlur={formik.handleBlur}
               error={formik.touched.mobile && Boolean(formik.errors.mobile)}
               value={formik.values.mobile}
@@ -260,11 +278,17 @@ const BasicDetails = () => {
               value={formik.values.gender}
             >
               <FormControlLabel
-                value="female"
+                value="Female"
+                disabled={role === 'admin'}
                 control={<Radio />}
                 label="Female"
               />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
+              <FormControlLabel
+                disabled={role === 'admin'}
+                value="Male"
+                control={<Radio />}
+                label="Male"
+              />
             </RadioGroup>
             {formik.errors.gender ? (
               <small className={styles.errorText}>{formik.errors.gender}</small>
@@ -279,10 +303,21 @@ const BasicDetails = () => {
             pt: 2,
           }}
         >
-          <Button onClick={() => dispatch(nextStepper())}>Next</Button>
-          <Button type="submit" variant="contained">
-            Save
-          </Button>
+          {role !== 'user' ? (
+            <Button onClick={() => dispatch(nextStepper())}>Next</Button>
+          ) : null}
+
+          {console.log(formik)}
+
+          {role !== 'admin' ? (
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={!formik.isValid}
+            >
+              Save
+            </Button>
+          ) : null}
         </Box>
       </form>
     </>

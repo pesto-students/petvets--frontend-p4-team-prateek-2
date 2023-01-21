@@ -10,7 +10,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoreActions: ['authStatus/storeUserData'],
         ignoredPaths: ['authStatus.userData.profileDetails.metadata'],
       },
     }),

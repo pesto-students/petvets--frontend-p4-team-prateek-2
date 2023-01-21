@@ -35,6 +35,7 @@ const profileValidation = Yup.object({
 const ClinicDetails = () => {
   const dispatch = useDispatch();
   const { userId, userData } = useSelector((state) => state.authStatus);
+  const { role } = userData;
 
   const initialValues = {
     clinicName: userData?.clinicName || '',
@@ -75,6 +76,7 @@ const ClinicDetails = () => {
             id="clinicName"
             name="clinicName"
             label="Clinic Name"
+            disabled={role === 'admin'}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.clinicName}
@@ -90,6 +92,7 @@ const ClinicDetails = () => {
             required
             fullWidth
             id="clinicAddress1"
+            disabled={role === 'admin'}
             name="clinicAddress1"
             label="Street/Colony Name"
             onChange={formik.handleChange}
@@ -110,6 +113,7 @@ const ClinicDetails = () => {
             required
             fullWidth
             id="clinicAddress2"
+            disabled={role === 'admin'}
             name="clinicAddress2"
             label="Area Name"
             onChange={formik.handleChange}
@@ -132,6 +136,7 @@ const ClinicDetails = () => {
             id="clinicCity"
             name="clinicCity"
             label="City"
+            disabled={role === 'admin'}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.clinicCity}
@@ -146,6 +151,7 @@ const ClinicDetails = () => {
             disablePortal
             id="combo-box-demo"
             options={states}
+            disabled={role === 'admin'}
             value={formik.values.clinicState}
             onChange={(_, value) =>
               formik.setFieldValue('clinicState', value?.label)
@@ -175,6 +181,7 @@ const ClinicDetails = () => {
             id="clinicPincode"
             name="clinicPincode"
             label="Pincode"
+            disabled={role === 'admin'}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.clinicPincode}
@@ -193,6 +200,7 @@ const ClinicDetails = () => {
             id="combo-box-demo"
             options={weeks}
             multiple={true}
+            disabled={role === 'admin'}
             value={formik.values.clinicDaysOff}
             onChange={(_, value) =>
               formik.setFieldValue('clinicDaysOff', value)
@@ -213,7 +221,6 @@ const ClinicDetails = () => {
               />
             )}
           />
-          {/* {console.log(formik)} */}
         </Grid>
       </Grid>
       <Box
@@ -230,9 +237,11 @@ const ClinicDetails = () => {
           </Button>
         </Grid>
         <Grid>
-          <Button type="submit" variant="contained">
-            Save
-          </Button>
+          {role !== 'admin' ? (
+            <Button type="submit" variant="contained">
+              Save
+            </Button>
+          ) : null}
         </Grid>
       </Box>
     </form>
