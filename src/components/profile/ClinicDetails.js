@@ -37,6 +37,12 @@ const ClinicDetails = () => {
   const { userId, userData } = useSelector((state) => state.authStatus);
   const { role } = userData;
 
+  const getClinicDaysOff = () => {
+    const { clinicDaysOff } = userData;
+    const daysOff = clinicDaysOff.map((day) => weeks[day]);
+    return daysOff;
+  };
+
   const initialValues = {
     clinicName: userData?.clinicName || '',
     clinicAddress1: userData?.clinicAddress1 || '',
@@ -46,8 +52,11 @@ const ClinicDetails = () => {
     clinicPincode: userData?.clinicPincode || '',
     clinicContactNo: userData?.clinicContactNo || '',
     clinicDaysOff: userData?.clinicDaysOff || '',
+    // clinicDaysOff: getClinicDaysOff(),
     consultationFee: userData?.consultationFee || '',
   };
+
+  console.log(initialValues);
 
   const userUpdate = useMutation(updateUserProfileAPI, {
     onSuccess: (data) => {

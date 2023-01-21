@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import 'dayjs/locale/de';
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -35,7 +35,7 @@ const initialValues = {
 const educationValidation = Yup.object({
   collegeName: Yup.string().required('Please enter your college name'),
   passingMarks: Yup.number().required('Please enter your grade'),
-  degree: Yup.string().required('Please select your degree'),
+  // degree: Yup.string().required('Please select your degree'),
   passingYear: Yup.number()
     .min(1950, 'Please enter a valid passing year')
     .max(new Date().getFullYear(), 'Please enter a valid passing year')
@@ -49,9 +49,10 @@ const educationValidation = Yup.object({
 
 const EducationalDetails = () => {
   const [open, setOpen] = useState(false);
-  const [education, setEducation] = useState([]);
+
   const [expanded, setExpanded] = useState(false);
   const { userId, userData } = useSelector((state) => state.authStatus);
+  const [education, setEducation] = useState([userData?.degree]);
   const { role } = userData;
 
   const initialValues = {
@@ -68,17 +69,6 @@ const EducationalDetails = () => {
     },
   });
 
-  useEffect(() => {
-    if (userData.degree === undefined) {
-      userUpdate.mutate({
-        userId,
-        degree: [],
-      });
-    } else {
-      setEducation([userData?.degree]);
-    }
-  }, [userData.degree, userId, userUpdate]);
-
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -87,7 +77,8 @@ const EducationalDetails = () => {
     initialValues: { ...initialValues },
     validationSchema: educationValidation,
     onSubmit: (values) => {
-      // setEducation([...education, values]);
+      console.log(values);
+      setEducation([...education, values]);
       setOpen(false);
     },
   });
@@ -204,13 +195,14 @@ const EducationalDetails = () => {
                         <TextField
                           onBlur={formik.handleBlur}
                           fullWidth
-                          error={
-                            formik.touched.degree &&
-                            Boolean(formik.errors.degree)
-                          }
-                          helperText={
-                            formik.touched.degree && formik.errors.degree
-                          }
+                          // error={
+                          //   formik.touched.degree &&
+                          //   Boolean(formik.errors.degree)
+                          // }
+                          value={degrees[1].label}
+                          // helperText={
+                          //   formik.touched.degree && formik.errors.degree
+                          // }
                           {...params}
                           label="Degree"
                         />

@@ -154,7 +154,7 @@ const BasicDetails = ({ userId, userData }) => {
           <label htmlFor="upload-button">
             <img
               src={image.preview}
-              alt="dummy"
+              alt="profilePic"
               width={150}
               height={150}
               style={{ borderRadius: '50%' }}
@@ -306,8 +306,6 @@ const BasicDetails = ({ userId, userData }) => {
           {role !== 'user' ? (
             <Button onClick={() => dispatch(nextStepper())}>Next</Button>
           ) : null}
-
-          {console.log(formik)}
 
           {role !== 'admin' ? (
             <Button

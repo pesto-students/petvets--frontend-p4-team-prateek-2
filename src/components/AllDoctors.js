@@ -12,39 +12,82 @@ const columns = [
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 150,
+    flex: 1,
+    headerAlign: 'center',
     valueGetter: (params) =>
       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
-  { field: 'email', headerName: 'Email', width: 300 },
+  {
+    field: 'email',
+    headerName: 'Email',
+    flex: 1,
+    headerAlign: 'center',
+  },
   {
     field: 'status',
     headerName: 'Status',
-    width: 150,
+    flex: 1,
+    headerAlign: 'center',
     renderCell: (params) => {
       if (params.value === 'pending') {
-        return <Chip variant="contained" color="secondary" label="Pending" />;
+        return (
+          <div
+            style={{
+              textAlign: 'center',
+              width: '100%',
+            }}
+          >
+            <Chip variant="contained" color="secondary" label="Pending" />
+          </div>
+        );
       }
       if (params.value === 'approved') {
-        return <Chip variant="contained" color="success" label="Approved" />;
+        return (
+          <div
+            style={{
+              textAlign: 'center',
+              width: '100%',
+            }}
+          >
+            <Chip variant="contained" color="success" label="Approved" />
+          </div>
+        );
       }
       if (params.value === 'rejected') {
-        return <Chip variant="contained" color="error" label="Rejected" />;
+        return (
+          <div
+            style={{
+              textAlign: 'center',
+              width: '100%',
+            }}
+          >
+            <Chip variant="contained" color="error" label="Rejected" />
+          </div>
+        );
       }
     },
   },
   {
     field: 'id',
     headerName: 'Link to Open',
+    headerAlign: 'center',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 150,
+    flex: 1,
+    // width: 150,
     renderCell: (params) => (
-      <Button variant="contained">
-        <Link className="link white" to={`allDoctors/${params.row.id}`}>
-          Open
-        </Link>
-      </Button>
+      <div
+        style={{
+          textAlign: 'center',
+          width: '100%',
+        }}
+      >
+        <Button variant="contained">
+          <Link className="link white" to={`allDoctors/${params.row.id}`}>
+            Open
+          </Link>
+        </Button>
+      </div>
     ),
   },
 ];

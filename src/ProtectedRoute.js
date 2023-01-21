@@ -4,7 +4,6 @@ import Loader from './MuiComponents/Loader';
 
 export const ProtectedRoute = ({ children }) => {
   const { authStatus } = useSelector((state) => state);
-  console.log(authStatus);
   const { isSignedIn, getUserLoading } = authStatus;
 
   if (getUserLoading) return <Loader />;
