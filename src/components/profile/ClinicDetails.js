@@ -289,6 +289,9 @@ const ClinicDetails = () => {
               error={formik.touched.about && Boolean(formik.errors.about)}
               helperText={formik.touched.about && formik.errors.about}
             />
+            <small style={{ color: 'red' }}>
+              {formik.touched.about && formik.errors.about}*
+            </small>
           </Grid>
         </Grid>
         <Box
@@ -306,7 +309,11 @@ const ClinicDetails = () => {
           </Grid>
           <Grid>
             {role !== 'admin' ? (
-              <Button type="submit" variant="contained">
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={!formik.isValid}
+              >
                 Save
               </Button>
             ) : null}
