@@ -8,6 +8,7 @@ import { AppointmentHistory } from './AppointmentHistory';
 import { HomeContent } from './homeContent';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
+import { Copyright } from '../MuiComponents/Copyright';
 
 export const Home = () => {
   const { userData } = useSelector((state) => state.authStatus);
@@ -29,6 +30,7 @@ export const Home = () => {
             {location.pathname === '/' ? <HomeContent /> : <Outlet />}
           </Box>
         </Container>
+        {/* <Copyright sx={{ mt: 5 }} /> */}
       </>
     );
   }
@@ -49,6 +51,7 @@ export const Home = () => {
             {location.pathname === '/' ? <AppointmentHistory /> : <Outlet />}
           </Box>
         </Container>
+        <Copyright sx={{ mt: 5 }} />
       </>
     );
   }
@@ -69,6 +72,7 @@ export const Home = () => {
             {location.pathname === '/' ? <AllDoctors /> : <Outlet />}
           </Box>
         </Container>
+        <Copyright sx={{ mt: 5 }} />
       </>
     );
   }

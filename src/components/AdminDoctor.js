@@ -51,7 +51,7 @@ const AdminDoctor = () => {
           color="success"
           onClick={() => sendEmailHandler('approved', userData)}
         >
-          Approved
+          Approve
         </Button>
         <Button
           variant="contained"

@@ -5,6 +5,7 @@ import image from '../assets/images/animal.jpg';
 import cowImage from '../assets/images/cow-custom.svg';
 import { useNavigate } from 'react-router-dom';
 import { SearchBar } from './SearchBar';
+import { Copyright } from '../MuiComponents/Copyright';
 import {
   Box,
   Card,
