@@ -21,7 +21,6 @@ export const Home = () => {
         <Container>
           <Box
             sx={{
-              marginTop: 4,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',

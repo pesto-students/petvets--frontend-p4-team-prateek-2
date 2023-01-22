@@ -28,23 +28,29 @@ export const AppointmentHistory = () => {
 
   React.useEffect(() => {
     setLoading(true);
-    const getAppointments = () => {
-      axiosClient
-        .get('api/appointmentHistory/' + user.userId)
-        .then((appointment) => {
-          appointment.data.map((app) => {
-            const bookingDate = moment(app.bookingDate);
-            const formattedDate = bookingDate.format('D MMM');
-            app.bookingDate = formattedDate;
-            app.isToday = moment().isSameOrAfter(bookingDate);
-            return app;
-          });
-          setLoading(false);
-          setAppointments(appointment.data);
-        });
+    const getAppointments = async () => {
+      let appointment = [];
+      if (role === 'doctor') {
+        appointment = await axiosClient.get(
+          'api/appointmentHistory/doctor/' + user.userId
+        );
+      } else {
+        appointment = await axiosClient.get(
+          'api/appointmentHistory/' + user.userId
+        );
+      }
+      appointment.data.map((app) => {
+        const bookingDate = moment(app.bookingDate);
+        const formattedDate = bookingDate.format('D MMM');
+        app.bookingDate = formattedDate;
+        app.isToday = moment().isSameOrAfter(bookingDate);
+        return app;
+      });
+      setLoading(false);
+      setAppointments(appointment.data);
     };
     getAppointments();
-  }, [user]);
+  }, [role, user]);
 
   const showDoctor = (id) => {
     console.log(id);
@@ -134,8 +140,16 @@ export const AppointmentHistory = () => {
                     component="div"
                     style={{ fontWeight: '800' }}
                   >
-                    Dr. {app.vetDetail.firstName} {app.vetDetail.lastName},
-                    {app.vetDetail.clinicName}
+                    {role === 'doctor' ? (
+                      <p>
+                        {app.userDetail.firstName} {app.userDetail.lastName}
+                      </p>
+                    ) : (
+                      <p>
+                        Dr. {app.vetDetail.firstName} {app.vetDetail.lastName},
+                        {app.vetDetail.clinicName}
+                      </p>
+                    )}
                   </Typography>
                   <Typography gutterBottom variant="body2" component="div">
                     Appointment time: {app.bookedSlot}
@@ -149,26 +163,28 @@ export const AppointmentHistory = () => {
                     color="text.secondary"
                   ></Typography>
                 </Grid>
-                <Grid item xs={4} style={centerStyle}>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      onClick={() => showDoctor(app.vetId)}
-                    >
-                      Book Again
-                    </Button>
-                    {!app.isToday && (
+                {role !== 'doctor' && (
+                  <Grid item xs={4} style={centerStyle}>
+                    <CardActions>
                       <Button
                         size="small"
                         variant="contained"
-                        onClick={() => cancelAppointment(app)}
+                        onClick={() => showDoctor(app.vetId)}
                       >
-                        Cancel
+                        Book Again
                       </Button>
-                    )}
-                  </CardActions>
-                </Grid>
+                      {!app.isToday && (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          onClick={() => cancelAppointment(app)}
+                        >
+                          Cancel
+                        </Button>
+                      )}
+                    </CardActions>
+                  </Grid>
+                )}
               </Grid>
             </CardContent>
           </Card>

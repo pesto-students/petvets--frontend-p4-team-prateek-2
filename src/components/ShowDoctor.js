@@ -490,7 +490,7 @@ export const ShowDoctor = () => {
               Services
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {doctor.services}
+              {doctor.about}
             </Typography>
           </CardContent>
         </Card>

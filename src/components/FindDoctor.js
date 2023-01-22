@@ -120,7 +120,7 @@ export const FindDoctor = () => {
                     {doc.yearsOfExperience} years of experience
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {doc.services}
+                    {doc.about}
                   </Typography>
                 </CardContent>
                 <CardActions>
