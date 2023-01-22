@@ -105,8 +105,17 @@ export const FindDoctor = () => {
       <Grid container spacing={2} style={{ marginTop: '10px' }}>
         {doctor.length ? (
           doctor.map((doc) => (
-            <Grid item xs={4} key={doc.userId}>
-              <Card sx={{ maxWidth: 345 }} key="doc._id" className="card">
+            <Grid item xs={6} md={4} key={doc.userId}>
+              <Card
+                sx={{ maxWidth: 345, height: 400 }}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'column',
+                }}
+                key="doc._id"
+                className="card"
+              >
                 <CardMedia
                   sx={{ height: 200, objectFit: 'contain' }}
                   image={doc.profileURL}
@@ -120,7 +129,7 @@ export const FindDoctor = () => {
                     {doc.yearsOfExperience} years of experience
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {doc.services}
+                    {doc.about}
                   </Typography>
                 </CardContent>
                 <CardActions>
@@ -128,6 +137,7 @@ export const FindDoctor = () => {
                     size="small"
                     variant="contained"
                     onClick={() => showDoctor(doc.userId)}
+                    style={{ marginLeft: 'auto', marginRight: 'auto' }}
                   >
                     Book Now
                   </Button>

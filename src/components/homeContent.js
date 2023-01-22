@@ -5,6 +5,7 @@ import image from '../assets/images/animal.jpg';
 import cowImage from '../assets/images/cow-custom.svg';
 import { useNavigate } from 'react-router-dom';
 import { SearchBar } from './SearchBar';
+import { Copyright } from '../MuiComponents/Copyright';
 import {
   Box,
   Card,
@@ -137,7 +138,7 @@ export const HomeContent = () => {
             <Grid item xs={4}>
               <Card
                 sx={{ maxWidth: 345, maxHeight: 450 }}
-                key="blog.title"
+                key="blog._id"
                 class="blog-card"
               >
                 <CardMedia sx={{ height: 140 }} image={blog.image} src="" />
