@@ -4,6 +4,7 @@ import {
   Button,
   Grid,
   Snackbar,
+  TextareaAutosize,
   TextField,
 } from '@mui/material';
 import { Box } from '@mui/system';
@@ -18,6 +19,7 @@ import { states, weeks } from '../../utilities/constants';
 
 const profileValidation = Yup.object({
   clinicName: Yup.string().required('Please enter your clinic name'),
+  about: Yup.string().required('Please enter your about yourself'),
   clinicAddress1: Yup.string().required(
     'Please enter your clinic street/colony name'
   ),
@@ -53,6 +55,7 @@ const ClinicDetails = () => {
   };
 
   const initialValues = {
+    about: userData?.about || '',
     clinicName: userData?.clinicName || '',
     clinicAddress1: userData?.clinicAddress1 || '',
     clinicAddress2: userData?.clinicAddress2 || '',
@@ -63,8 +66,6 @@ const ClinicDetails = () => {
     clinicDaysOff: getClinicDaysOff(),
     consultationFee: userData?.consultationFee || '',
   };
-
-  console.log(initialValues);
 
   const userUpdate = useMutation(updateUserProfileAPI, {
     onSuccess: (data) => {
@@ -268,6 +269,25 @@ const ClinicDetails = () => {
                   label="Days Off"
                 />
               )}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextareaAutosize
+              autoComplete="given-name"
+              required
+              style={{ width: '100%' }}
+              id="about"
+              name="about"
+              label="About"
+              minRows={5}
+              placeholder="Please add some information about yourself"
+              disabled={role === 'admin'}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.about}
+              error={formik.touched.about && Boolean(formik.errors.about)}
+              helperText={formik.touched.about && formik.errors.about}
             />
           </Grid>
         </Grid>
