@@ -51,8 +51,7 @@ const ClinicDetails = () => {
     clinicState: userData?.clinicState || '',
     clinicPincode: userData?.clinicPincode || '',
     clinicContactNo: userData?.clinicContactNo || '',
-    clinicDaysOff: userData?.clinicDaysOff || '',
-    // clinicDaysOff: getClinicDaysOff(),
+    clinicDaysOff: getClinicDaysOff(),
     consultationFee: userData?.consultationFee || '',
   };
 
@@ -68,9 +67,14 @@ const ClinicDetails = () => {
     initialValues: { ...initialValues },
     validationSchema: profileValidation,
     onSubmit: (values) => {
+      const clinicDaysOff = values.clinicDaysOff.map((day) => day.value);
+      const userDetails = {
+        ...values,
+        clinicDaysOff,
+      };
       userUpdate.mutate({
         userId,
-        ...values,
+        ...userDetails,
       });
     },
   });
@@ -161,6 +165,7 @@ const ClinicDetails = () => {
             id="combo-box-demo"
             options={states}
             disabled={role === 'admin'}
+            isOptionEqualToValue={(option, value) => option.label === value}
             value={formik.values.clinicState}
             onChange={(_, value) =>
               formik.setFieldValue('clinicState', value?.label)
@@ -208,12 +213,16 @@ const ClinicDetails = () => {
             disablePortal
             id="combo-box-demo"
             options={weeks}
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
             multiple={true}
             disabled={role === 'admin'}
             value={formik.values.clinicDaysOff}
             onChange={(_, value) =>
               formik.setFieldValue('clinicDaysOff', value)
             }
+            getOptionLabel={(options) => options.label}
             renderInput={(params) => (
               <TextField
                 onBlur={formik.handleBlur}
