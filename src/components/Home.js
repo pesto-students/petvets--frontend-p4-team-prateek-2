@@ -30,7 +30,6 @@ export const Home = () => {
             {location.pathname === '/' ? <HomeContent /> : <Outlet />}
           </Box>
         </Container>
-        {/* <Copyright sx={{ mt: 5 }} /> */}
       </>
     );
   }
@@ -51,7 +50,6 @@ export const Home = () => {
             {location.pathname === '/' ? <AppointmentHistory /> : <Outlet />}
           </Box>
         </Container>
-        <Copyright sx={{ mt: 5 }} />
       </>
     );
   }
@@ -72,7 +70,6 @@ export const Home = () => {
             {location.pathname === '/' ? <AllDoctors /> : <Outlet />}
           </Box>
         </Container>
-        <Copyright sx={{ mt: 5 }} />
       </>
     );
   }
